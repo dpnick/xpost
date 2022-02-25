@@ -1,4 +1,5 @@
 import Box from '@components/Box';
+import ErrorBoundary from '@components/ErrorBoundary';
 import Header from '@components/Header';
 import Spinner from '@components/Spinner';
 import '@styles/globals.scss';
@@ -17,7 +18,7 @@ function App({
   Component: NextComponentType<NextPageContext> & { auth: boolean };
 }) {
   return (
-    <>
+    <ErrorBoundary>
       <FaviconHead />
       <SessionProvider session={session}>
         <ThemeProvider>
@@ -34,7 +35,7 @@ function App({
         </ThemeProvider>
         <Toaster />
       </SessionProvider>
-    </>
+    </ErrorBoundary>
   );
 }
 

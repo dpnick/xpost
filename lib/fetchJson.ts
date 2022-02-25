@@ -6,7 +6,19 @@ export default async function fetchJson<T>(
   showToast?: boolean,
   customToasts?: { loading: string; success: string; error: string }
 ): Promise<T> {
-  const promise = fetch(url, init);
+  const promise = fetch(url, init)
+    .then((response) => {
+      if (!response.ok) {
+        console.log(response);
+        throw new Error('An error occured');
+      }
+      return response.json();
+    })
+    .catch((err) => {
+      console.log(err);
+      throw new Error('An error occured');
+    });
+
   if (showToast) {
     toast.promise(promise, {
       loading: customToasts?.loading ?? 'Getting ready',
@@ -15,11 +27,5 @@ export default async function fetchJson<T>(
     });
   }
 
-  const response = await promise;
-  if (!response.ok) {
-    console.log(response);
-    throw new Error('An error occured');
-  }
-  const result = await response.json();
-  return result;
+  return promise;
 }

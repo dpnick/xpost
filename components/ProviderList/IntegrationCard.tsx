@@ -30,7 +30,7 @@ export default function IntegrationCard({
   const deleteIntegration = async (toastId: string) => {
     try {
       toast.dismiss(toastId);
-      const res = await fetchJson(
+      await fetchJson(
         '/api/integration/delete',
         {
           method: 'POST',
@@ -42,10 +42,8 @@ export default function IntegrationCard({
         },
         true
       );
-      console.log(res);
       router.replace(router.asPath);
-    } catch (err) {
-      console.log(err);
+    } catch {
       toast.error('Something went wrong while deleting');
     }
   };
@@ -80,6 +78,8 @@ export default function IntegrationCard({
         bg='accent'
         p='8px'
         borderBottom='1px solid lightgray'
+        borderTopLeftRadius='8px'
+        borderTopRightRadius='8px'
       >
         <Box display='flex' alignItems='center'>
           <Image src={provider!.logoUrl} height={35} width={35} />
@@ -88,8 +88,17 @@ export default function IntegrationCard({
           </Text>
         </Box>
         <Box display='flex' alignItems='center'>
-          <MdDelete size={24} onClick={showConfirm} />
+          <MdDelete
+            size={24}
+            onClick={showConfirm}
+            className={styles.pointer}
+          />
         </Box>
+      </Box>
+      <Box mt='16px' className={styles.flexCenter}>
+        <Text fontWeight='bold' textTransform='capitalize'>
+          {integration?.username}
+        </Text>
       </Box>
       <Box
         display='flex'

@@ -1,4 +1,10 @@
-import { Integration, ProviderName } from '@prisma/client';
+import {
+  Integration,
+  Post,
+  Provider,
+  ProviderName,
+  Publication,
+} from '@prisma/client';
 import { IntegrationInfos } from './integration';
 
 export interface ProviderLib {
@@ -8,7 +14,14 @@ export interface ProviderLib {
 }
 
 export interface ProviderHelper {
-  init?: (params: { token: string; username: string }) => Promise<string>;
+  init: (params: {
+    token: string;
+    username?: string;
+  }) => Promise<Partial<Integration>>;
   getUserInfos: (params: Integration) => Promise<IntegrationInfos>;
-  publishNewArticle: () => void;
+  publishNewArticle: (
+    post: Post,
+    integration: Integration & { provider: Provider },
+    originalUrl?: string
+  ) => Promise<Omit<Publication, 'id'>>;
 }

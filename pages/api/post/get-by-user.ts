@@ -22,7 +22,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       select: {
         id: true,
         title: true,
-        createdAt: true,
+        content: true,
+        updatedAt: true,
         cover: true,
       },
       orderBy: [{ updatedAt: 'desc' }],
@@ -39,8 +40,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       select: {
         id: true,
         title: true,
-        createdAt: true,
+        updatedAt: true,
+        firstPublishedAt: true,
         cover: true,
+        publications: true,
       },
       orderBy: [{ firstPublishedAt: 'desc' }],
       take: 10,

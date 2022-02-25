@@ -1,12 +1,27 @@
 import fetchJson from '@lib/fetchJson';
 import { IntegrationInfos } from '@models/integration';
-import { Integration } from '@prisma/client';
-import GET_INFOS from './query/getInfos';
-import GET_PUBLICATION_ID from './query/getPublicationId';
+import { Integration, Post, Provider, Publication } from '@prisma/client';
+import GET_INFOS from './queries/getInfos';
+import GET_PUBLICATION_ID from './queries/getPublicationId';
+import PUBLISH_ARTICLE from './queries/publishArticle';
 
 const HASHNODE_URL = 'https://api.hashnode.com/';
 
-function init({ token, username }: { token: string; username: string }) {
+interface PublishInput {
+  title: string;
+  coverImageURL: string;
+  contentMarkdown: string;
+  tags: { _id: string }[];
+  isRepublished?: { originalArticleURL: string };
+}
+
+function init({
+  token,
+  username,
+}: {
+  token: string;
+  username?: string;
+}): Promise<Partial<Integration>> {
   // get hashnode publicationId
   // mandatory to be able to publish
   const variables = { username };
@@ -27,7 +42,7 @@ function init({ token, username }: { token: string; username: string }) {
     if (errors) {
       throw new Error(errors[0]?.message ?? 'An error occured');
     }
-    return data?.user?.publication?._id;
+    return { publicationId: data?.user?.publication?._id };
   });
 }
 
@@ -65,6 +80,63 @@ function getUserInfos({
   });
 }
 
-function publishNewArticle() {}
+function publishNewArticle(
+  post: Post,
+  integration: Integration & { provider: Provider },
+  originalUrl?: string
+): Promise<Omit<Publication, 'id'>> {
+  const input: PublishInput = {
+    title: post.title!,
+    coverImageURL: post.cover!,
+    contentMarkdown: post.content!,
+    tags: [
+      { _id: '56744723958ef13879b952d7' },
+      { _id: '56744721958ef13879b94ae7' },
+    ],
+  };
+
+  if (originalUrl) {
+    input.isRepublished = {
+      originalArticleURL: originalUrl,
+    };
+  }
+  const publicationId = integration.publicationId;
+  const variables = { input, publicationId };
+
+  return fetchJson<{
+    data: {
+      createPublicationStory: {
+        post: { slug: string; publication: { domain: string } };
+      };
+    };
+    errors: [{ message: string }];
+  }>(HASHNODE_URL, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: integration.token,
+    },
+    body: JSON.stringify({
+      query: PUBLISH_ARTICLE,
+      variables,
+    }),
+  }).then(({ data, errors }) => {
+    if (errors) {
+      throw new Error(errors[0]?.message ?? 'An error occured');
+    }
+    const slug = data?.createPublicationStory?.post?.slug;
+    const domain = data?.createPublicationStory?.post?.publication?.domain;
+    const customDomain = domain ?? `${integration.username}.hashnode.dev`;
+
+    const publication: Omit<Publication, 'id'> = {
+      publishedAt: new Date(),
+      url: `https://${customDomain}/${slug}`,
+      postId: post.id,
+      integrationId: integration.id,
+      isCanonical: !originalUrl,
+    };
+    return publication;
+  });
+}
 
 export { init, getUserInfos, publishNewArticle };

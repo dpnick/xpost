@@ -1,10 +1,9 @@
 import Box from '@components/Box';
-import Card from '@components/Card';
-import Collapse from '@components/Collapse';
 import PostList from '@components/PostList';
 import ProviderList from '@components/ProviderList';
 import fetchJson from '@lib/fetchJson';
-import { Integration, Post, Provider } from '@prisma/client';
+import { Integration, Post, Provider, Publication } from '@prisma/client';
+import styles from '@styles/Dashboard.module.scss';
 import { getSession, signIn } from 'next-auth/react';
 import router from 'next/router';
 import { useEffect } from 'react';
@@ -16,9 +15,9 @@ export const EMPTY_IMG =
 
 interface DashboardProps {
   drafts: Post[];
-  published: Post[];
+  published: (Post & { publications: Publication[] })[];
   providers: Provider[];
-  integrations: Integration[];
+  integrations: (Integration & { provider: Provider })[];
   isNotAuthenticated: boolean;
 }
 
@@ -37,20 +36,23 @@ export default function Dashboard({
 
   const createNewDraft = async (event: React.MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
-    const newPost: Post = await fetchJson(
-      '/api/post/create',
-      {
-        method: 'POST',
-        headers: { 'Content-type': 'application/json' },
-      },
-      true
-    );
 
-    if (newPost?.id) {
+    try {
+      const newPost: Post = await fetchJson(
+        '/api/post/create',
+        {
+          method: 'POST',
+          headers: { 'Content-type': 'application/json' },
+        },
+        true
+      );
+
       router.push({
         pathname: `dashboard/post/${newPost.id}`,
         query: { isPublished: false },
       });
+    } catch {
+      toast.error('Please contact our support');
     }
   };
 
@@ -60,15 +62,11 @@ export default function Dashboard({
         <h3>Providers</h3>
       </div>
       <ProviderList providers={providers} integrations={integrations} />
-      <Card
-        style={{
-          padding: 0,
-          marginTop: '16px',
-          color: 'accent',
-          background: 'accent',
-        }}
-      >
-        <Collapse
+      <Box p={0} mt='32px' className={styles.card}>
+        <PostList
+          isDraft
+          posts={drafts}
+          integrations={integrations}
           title={`Drafts (${drafts?.length})`}
           headerAction={
             <Box
@@ -78,7 +76,7 @@ export default function Dashboard({
               justifyContent='space-between'
               alignItems='center'
               border='1px solid primary'
-              borderRadius='8px'
+              borderRadius='8px 16px'
               padding='8px 16px'
               marginRight='16px'
               onClick={createNewDraft}
@@ -88,22 +86,15 @@ export default function Dashboard({
               <IoAddSharp size={24} />
             </Box>
           }
-        >
-          <PostList posts={drafts} />
-        </Collapse>
-      </Card>
-      <Card
-        style={{
-          padding: 0,
-          marginTop: '16px',
-          color: 'accent',
-          background: 'accent',
-        }}
-      >
-        <Collapse title={`Latest published (${published?.length})`}>
-          <PostList posts={published} />
-        </Collapse>
-      </Card>
+        />
+      </Box>
+      <Box p={0} mt='16px' className={styles.card}>
+        <PostList
+          posts={published}
+          integrations={integrations}
+          title={`Latest published (${published?.length})`}
+        />
+      </Box>
     </Box>
   );
 }

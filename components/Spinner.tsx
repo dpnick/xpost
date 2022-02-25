@@ -1,3 +1,4 @@
+import styles from '@styles/Dashboard.module.scss';
 import Image from 'next/image';
 import React from 'react';
 import styled, { keyframes } from 'styled-components';
@@ -22,22 +23,15 @@ const StyledSpinner = styled(Box)`
   animation: ${spin} 1s linear infinite;
 `;
 
-const AbsoluteCenterBox = styled(Box)`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-`;
-
 export default function Spinner() {
   return (
     <Box width={80} height={80}>
-      <AbsoluteCenterBox>
+      <Box className={styles.absoluteCenter}>
         <StyledSpinner />
-      </AbsoluteCenterBox>
-      <AbsoluteCenterBox>
+      </Box>
+      <Box className={styles.absoluteCenter}>
         <Image src='/icon.svg' height={35} width={35} />
-      </AbsoluteCenterBox>
+      </Box>
     </Box>
   );
 }

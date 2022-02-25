@@ -73,7 +73,7 @@ model Provider {
     displayName     String
     logoUrl       String
     intructionsUrl      String
-    needInit        Boolean     @default(false)
+    color       String
     integrations  Integration[]
 }
 
@@ -102,6 +102,7 @@ model Publication {
   id            String    @id @default(cuid())
   publishedAt     DateTime    @default(now())
   url       String
+  isCanonical       Boolean     @default(false)
   postId       String
   post         Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
   integrationId       String

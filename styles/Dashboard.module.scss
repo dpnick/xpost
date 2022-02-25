@@ -19,3 +19,20 @@
   justify-content: center;
   align-items: center;
 }
+
+.absoluteCenter {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.button {
+  padding: 8px 16px;
+  border-radius: 8px 16px;
+  cursor: pointer;
+}
+
+.pointer {
+  cursor: pointer;
+}

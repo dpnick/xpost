@@ -1,6 +1,6 @@
 import prisma from '@lib/prisma';
 import providers from '@lib/providers';
-import { ProviderName } from '@prisma/client';
+import { Integration, ProviderName } from '@prisma/client';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getSession } from 'next-auth/react';
 
@@ -8,10 +8,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSession({ req });
 
   const token: string = req.body?.token;
-  const username: string = req.body?.username;
+  const username: string | undefined = req.body?.username;
   const providerId: string = req.body?.providerId;
   const providerName: ProviderName = req.body?.providerName;
-  const needInit: string = req.body?.needInit;
 
   if (!session) {
     return res.status(401).json({
@@ -28,16 +27,22 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const email = session.user!.email ?? undefined;
 
-    let publicationId: string | undefined = undefined;
-    if (needInit) {
-      publicationId = await providers[providerName].init!({ token, username });
+    const userData: Partial<Integration> = await providers[providerName].init({
+      token,
+      username,
+    });
+
+    if (!userData) {
+      return res.status(401).json({
+        message: 'Unauthorized',
+      });
     }
 
     const newIntegration = await prisma.integration.create({
       data: {
-        username,
         token,
-        publicationId,
+        username: username ?? userData.username,
+        publicationId: userData.publicationId,
         user: {
           connect: {
             email,

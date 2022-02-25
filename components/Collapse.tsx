@@ -1,7 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { IoChevronDownSharp } from 'react-icons/io5';
 import styled from 'styled-components';
-import Box from './Box';
+
+interface CollapseProps {
+  isOpen: boolean;
+  children: React.ReactNode;
+}
 
 const CollapsedDiv = styled.div<{ height: number | undefined }>`
   overflow: hidden;
@@ -9,26 +12,7 @@ const CollapsedDiv = styled.div<{ height: number | undefined }>`
   height: ${({ height }) => (height ? `${height}px` : 0)};
 `;
 
-const AnimatedIcon = styled(IoChevronDownSharp)<{ open: boolean }>`
-  font-size: 24px;
-  transition: transform 0.2s;
-  transform: ${({ open }) => (open ? 'rotate(180deg)' : 'rotate(0)')};
-`;
-
-interface CollapseProps {
-  open?: boolean;
-  title: string;
-  headerAction?: React.ReactNode;
-  children: React.ReactNode;
-}
-
-export default function Collapse({
-  open,
-  title,
-  children,
-  headerAction,
-}: CollapseProps) {
-  const [isOpen, setIsOpen] = useState<boolean>(open ?? false);
+export default function Collapse({ isOpen, children }: CollapseProps) {
   const [height, setHeight] = useState<number | undefined>();
   const ref = useRef<HTMLDivElement>(null);
 
@@ -40,34 +24,9 @@ export default function Collapse({
     setHeight(nextHeight);
   }, [isOpen]);
 
-  const toggleOpening = () => {
-    setIsOpen((prev) => !prev);
-  };
-
   return (
-    <>
-      <Box
-        onClick={toggleOpening}
-        display='flex'
-        justifyContent='space-between'
-        alignItems='center'
-        borderBottom={`1px solid ${isOpen ? 'lightgray' : 'transparent'}`}
-        padding='16px'
-        borderRadius='8px'
-        style={{ cursor: 'pointer' }}
-      >
-        <h4>{title}</h4>
-        <Box display='flex' alignItems='center'>
-          {headerAction}
-          <AnimatedIcon open={isOpen} />
-        </Box>
-      </Box>
-
-      <CollapsedDiv height={height}>
-        <div ref={ref}>
-          <Box padding='16px'>{children}</Box>
-        </div>
-      </CollapsedDiv>
-    </>
+    <CollapsedDiv height={height}>
+      <div ref={ref}>{children}</div>
+    </CollapsedDiv>
   );
 }
