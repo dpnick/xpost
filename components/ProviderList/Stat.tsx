@@ -19,7 +19,7 @@ export default function Stat({ value, label, Icon }: StatProps) {
     >
       <Icon size={24} color='#24b47e' />
       <Text ml='8px' mt='8px'>
-        {value ? (
+        {value || value === 0 ? (
           <Text display='unset' fontWeight='bold'>
             {value}
           </Text>

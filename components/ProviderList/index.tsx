@@ -1,7 +1,7 @@
 import Collapse from '@components/Collapse';
 import Modal from '@components/Modal';
 import NewIntegration from '@components/NewIntegration.tsx';
-import providersHelper from '@lib/providers';
+import fetchJson from '@lib/fetchJson';
 import { IntegrationInfos } from '@models/integration';
 import { Integration, Provider } from '@prisma/client';
 import styles from '@styles/Dashboard.module.scss';
@@ -16,7 +16,7 @@ import ProviderCard from './ProviderCard';
 
 interface ProviderListProps {
   providers: Provider[];
-  integrations: Integration[];
+  integrations: (Integration & { provider: Provider })[];
 }
 
 const CardList = styled.div`
@@ -48,15 +48,17 @@ export default function ProviderList({
   useEffect(() => {
     const getInfos = async () => {
       if (integrations?.length > 0) {
-        const promises = integrations.map((integration) => {
-          const provider = providers.find(
-            (provider) => provider.id === integration.providerId
-          );
-          return providersHelper[provider!.name].getUserInfos(integration);
-        });
-
         try {
-          const result = await Promise.all(promises);
+          const result: IntegrationInfos[] = await fetchJson(
+            '/api/integration/get-infos',
+            {
+              method: 'POST',
+              body: JSON.stringify({
+                integrations,
+              }),
+              headers: { 'Content-type': 'application/json' },
+            }
+          );
           setInfos(result);
         } catch {
           toast.error('Something went wrong getting integration infos');
@@ -102,9 +104,6 @@ export default function ProviderList({
         {newIntegrationModal()}
         <CardList>
           {integrations.map((integration) => {
-            const provider = providers.find(
-              (provider) => provider.id === integration.providerId
-            );
             const integrationInfos = infos?.find(
               ({ integrationId }) => integrationId === integration.id
             );
@@ -112,7 +111,7 @@ export default function ProviderList({
               <IntegrationCard
                 key={integration.id}
                 integration={integration}
-                provider={provider!}
+                provider={integration.provider!}
                 infos={integrationInfos!}
               />
             );

@@ -45,17 +45,25 @@ function init({
   });
 }
 
-function getUserInfos({
-  id,
-  token,
-  username,
-}: Integration): Promise<IntegrationInfos> {
-  return fetchJson<DevtoArticle[]>(`${DEVT0_URL}/articles/me/published`, {
-    method: 'GET',
-    headers: {
-      'api-key': token,
-    },
-  }).then((articles) => {
+function getUserInfos({ id, token }: Integration): Promise<IntegrationInfos> {
+  const numberOfFollowers = fetchJson<{ id: number; username: string }[]>(
+    `${DEVT0_URL}/followers/users?per_page=1000`,
+    {
+      method: 'GET',
+      headers: {
+        'api-key': token,
+      },
+    }
+  ).then((followers) => followers?.length);
+  const infosFromArticles = fetchJson<DevtoArticle[]>(
+    `${DEVT0_URL}/articles/me/published?per_page=1000`,
+    {
+      method: 'GET',
+      headers: {
+        'api-key': token,
+      },
+    }
+  ).then((articles) => {
     // compute each articles to get desired infos
     const postsCount = articles?.length;
     const reactionsCount = articles?.reduce(
@@ -69,6 +77,13 @@ function getUserInfos({
       reactionsCount,
     };
   });
+
+  return Promise.all([numberOfFollowers, infosFromArticles]).then(
+    ([numFollowers, infosFromArticles]) => ({
+      ...infosFromArticles,
+      followersCount: numFollowers,
+    })
+  );
 }
 
 function publishNewArticle(

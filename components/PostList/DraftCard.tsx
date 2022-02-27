@@ -27,7 +27,7 @@ const PostCard = styled(Box)`
 `;
 
 export default function DraftCard({ draft, selectPost }: DraftCardProps) {
-  const { id, published, cover, title, updatedAt } = draft;
+  const { id, published, cover, title, content, updatedAt } = draft;
 
   const onPublish = (event: React.MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
@@ -53,9 +53,6 @@ export default function DraftCard({ draft, selectPost }: DraftCardProps) {
             fontWeight='bold'
             overflow='hidden'
             maxHeight='3.6em'
-            style={{
-              textOverflow: 'ellipsis',
-            }}
           >
             {title}
           </Text>
@@ -82,6 +79,15 @@ export default function DraftCard({ draft, selectPost }: DraftCardProps) {
               background='unset'
             />
           </Box>
+          <Text
+            overflow='hidden'
+            lineHeight='1.2em'
+            maxHeight='6em'
+            display={['none', 'unset']}
+            mt='8px'
+          >
+            {content}
+          </Text>
         </Box>
       </PostCard>
     </Link>

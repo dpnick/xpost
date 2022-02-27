@@ -32,7 +32,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       username,
     });
 
-    if (!userData) {
+    if (!userData || (username && !userData?.publicationId)) {
       return res.status(401).json({
         message: 'Unauthorized',
       });

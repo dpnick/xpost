@@ -10,6 +10,11 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import React, { useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
+import { BsFillCloudCheckFill } from 'react-icons/bs';
+import {
+  IoArrowBackCircleSharp,
+  IoInformationCircleOutline,
+} from 'react-icons/io5';
 import Editor from 'rich-markdown-editor';
 import styled from 'styled-components';
 import { EMPTY_IMG } from '..';
@@ -36,6 +41,7 @@ export default function Edit() {
 
   const [post, setPost] = useState<Post | undefined>();
   const [toUpdate, setToUpdate] = useState<Partial<Post>>();
+  const [isSaving, setIsSaving] = useState<boolean>(false);
 
   const [isLoading, setIsLoading] = useState<boolean>(!!pid);
 
@@ -66,14 +72,15 @@ export default function Edit() {
     let handler: NodeJS.Timeout;
     if (post) {
       handler = setTimeout(async () => {
-        console.log('CALLED');
         try {
+          setIsSaving(true);
           const updatedPost: Post = await fetchJson('/api/post/update', {
             method: 'POST',
             body: JSON.stringify({ update: toUpdate, pid: post.id }),
             headers: { 'Content-type': 'application/json' },
           });
           setPost(updatedPost);
+          setIsSaving(false);
         } catch {
           toast.error('Something went wrong updating your draft');
         }
@@ -166,8 +173,35 @@ export default function Edit() {
     coverRef?.current?.click();
   };
 
+  const goBack = () => router.back();
+
   return (
     <Box padding={['32px 6vw', '32px 12vw']}>
+      <Box
+        width='100%'
+        display='flex'
+        justifyContent='space-between'
+        alignItems='center'
+      >
+        <IoArrowBackCircleSharp
+          onClick={goBack}
+          className={styles.pointer}
+          size='2em'
+        />
+        <Box position='relative'>
+          {isSaving ? (
+            <Spinner width={20} height={20} icon={false} />
+          ) : (
+            <BsFillCloudCheckFill size='1.5em' />
+          )}
+        </Box>
+      </Box>
+      {isPublished && (
+        <Box display='flex' alignItems='center' justifyContent='center'>
+          <IoInformationCircleOutline color='gold' size={24} />
+          <Text>At the moment published article are readonly.</Text>
+        </Box>
+      )}
       <Box
         width='100%'
         height='40vh'
@@ -201,6 +235,7 @@ export default function Edit() {
       />
       <Editor
         autoFocus
+        readOnly={!!isPublished}
         defaultValue={post?.content ?? undefined}
         onChange={udpateContent}
         uploadImage={uploadImg}

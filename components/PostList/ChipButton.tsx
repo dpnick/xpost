@@ -24,7 +24,7 @@ export default function ChipButton({
       color={color}
       bg={background}
       border={`1px solid ${background === 'unset' ? color : background}`}
-      marginX='4px'
+      margin='4px'
       borderRadius={30}
       display='flex'
       alignItems='center'
