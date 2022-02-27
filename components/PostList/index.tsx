@@ -37,11 +37,7 @@ export default function PostList({
     <>
       {selectedPost && (
         <Modal onClose={hidePublishModal}>
-          <PublishModal
-            post={selectedPost}
-            integrations={integrations}
-            onClose={hidePublishModal}
-          />
+          <PublishModal post={selectedPost} integrations={integrations} />
         </Modal>
       )}
       {posts?.map((post) => (

@@ -1,3 +1,4 @@
+import styles from '@styles/Dashboard.module.scss';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import router from 'next/router';
@@ -64,6 +65,7 @@ export default function Header() {
       </Box>
       <Box display='flex'>
         <Box
+          className={styles.pointer}
           position='relative'
           borderRadius='50%'
           width={35}
@@ -73,10 +75,14 @@ export default function Header() {
           alignItems='center'
           bg='white'
           overflow='hidden'
-          style={{ cursor: 'pointer' }}
         >
           {session?.user?.image ? (
-            <Image src={session.user.image} layout='fill' objectFit='cover' />
+            <Image
+              src={session.user.image}
+              alt='user image'
+              layout='fill'
+              objectFit='cover'
+            />
           ) : (
             <AiOutlineUser color='black' />
           )}

@@ -14,7 +14,6 @@ import StyledSelect from './StyledSelect';
 interface PublishModalProps {
   post: Post;
   integrations: (Integration & { provider: Provider })[];
-  onClose: () => void;
 }
 
 const ModalIntegrationList = styled.div`
@@ -29,7 +28,6 @@ const ModalIntegrationList = styled.div`
 export default function PublishModal({
   post,
   integrations,
-  onClose,
 }: PublishModalProps) {
   const router = useRouter();
   const [successUrl, setSuccessUrl] = useState<string>();

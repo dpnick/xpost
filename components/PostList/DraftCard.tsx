@@ -41,10 +41,16 @@ export default function DraftCard({ draft, selectPost }: DraftCardProps) {
         pathname: `dashboard/post/[id]`,
         query: { id, isPublished: published },
       }}
+      passHref
     >
       <PostCard className={styles.clickableCard}>
         <Box position='relative' width='30vw' height='15vw' flexShrink={0}>
-          <Image src={cover ?? EMPTY_IMG} layout='fill' objectFit='contain' />
+          <Image
+            src={cover ?? EMPTY_IMG}
+            alt='cover'
+            layout='fill'
+            objectFit='contain'
+          />
         </Box>
         <Box display='flex' flexDirection='column' ml='8px'>
           <Text

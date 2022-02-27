@@ -1,6 +1,6 @@
 import Box from '@components/Box';
 import styles from '@styles/Dashboard.module.scss';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { IoMdClose } from 'react-icons/io';
 import ContentContainer from './ContentContainer';
@@ -15,21 +15,24 @@ export default function Modal({ onClose, children }: ModalProps) {
   const [isBrowser, setIsBrowser] = useState(false);
   const modalWrapperRef = useRef<HTMLDivElement>(null);
 
+  const backDropHandler = useCallback(
+    (event: MouseEvent) => {
+      const target = event?.target as Node;
+      if (target && !modalWrapperRef?.current?.contains(target)) {
+        document.body.classList.remove('modal-open');
+        onClose();
+      }
+    },
+    [onClose]
+  );
+
   useEffect(() => {
     setIsBrowser(true);
     document.body.classList.add('modal-open');
     window.addEventListener('click', backDropHandler);
 
     return () => window.removeEventListener('click', backDropHandler);
-  }, []);
-
-  const backDropHandler = (event: MouseEvent) => {
-    const target = event?.target as Node;
-    if (target && !modalWrapperRef?.current?.contains(target)) {
-      document.body.classList.remove('modal-open');
-      onClose();
-    }
-  };
+  }, [backDropHandler]);
 
   const handleCloseClick = (event: React.MouseEvent<SVGElement>) => {
     event.preventDefault();

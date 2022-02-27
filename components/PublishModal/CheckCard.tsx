@@ -29,7 +29,12 @@ export default function CheckCard({ integration, onToggle }: CheckCardProps) {
       position='relative'
       padding='8px'
     >
-      <Image src={integration.provider.logoUrl} width={100} height={100} />
+      <Image
+        src={integration.provider.logoUrl}
+        alt='provider logo'
+        width={100}
+        height={100}
+      />
       <Text mt='8px' fontWeight='bold' fontSize='1.2em'>
         {integration.provider.displayName}
       </Text>

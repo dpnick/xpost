@@ -89,7 +89,7 @@ export default function Edit() {
     return () => {
       clearTimeout(handler);
     };
-  }, [toUpdate]);
+  }, [toUpdate, post]);
 
   const uploadImg = async (file: File) => {
     const formData = new FormData();
@@ -212,6 +212,7 @@ export default function Edit() {
       >
         <Image
           src={post?.cover ?? EMPTY_IMG}
+          alt='cover'
           layout='fill'
           objectFit='contain'
         />

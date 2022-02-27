@@ -57,7 +57,7 @@ export default function NewIntegration({
   provider,
   closeModal,
 }: NewIntegrationProps) {
-  let { id, name, logoUrl, intructionsUrl } = provider;
+  const { id, name, logoUrl, intructionsUrl } = provider;
   const [submitted, setSubmitted] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(true);
 
@@ -122,6 +122,7 @@ export default function NewIntegration({
         <Collapse isOpen={isOpen}>
           <Box width='100%' height='50vh' position='relative'>
             <Image
+              alt='instructions'
               src={intructionsUrl!.toString()}
               layout='fill'
               objectFit='contain'

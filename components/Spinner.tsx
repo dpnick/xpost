@@ -41,7 +41,12 @@ export default function Spinner({
       </Box>
       {icon && (
         <Box className={styles.absoluteCenter}>
-          <Image src='/icon.svg' height={height / 2} width={width / 2} />
+          <Image
+            src='/icon.svg'
+            alt='xpost logo'
+            height={height / 2}
+            width={width / 2}
+          />
         </Box>
       )}
     </Box>

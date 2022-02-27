@@ -82,7 +82,12 @@ export default function IntegrationCard({
         borderTopRightRadius='8px'
       >
         <Box display='flex' alignItems='center'>
-          <Image src={provider!.logoUrl} height={35} width={35} />
+          <Image
+            src={provider!.logoUrl}
+            alt='provider logo'
+            height={35}
+            width={35}
+          />
           <Text fontSize='1.2em' fontWeight='bold' ml='16px'>
             {provider?.displayName}
           </Text>
