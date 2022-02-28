@@ -52,9 +52,6 @@ export default function PublishedCard({
             fontWeight='bold'
             overflow='hidden'
             maxHeight='3.6em'
-            style={{
-              textOverflow: 'ellipsis',
-            }}
           >
             {title}
           </Text>

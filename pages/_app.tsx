@@ -63,6 +63,7 @@ function Auth({ children }: { children: JSX.Element }) {
 function FaviconHead() {
   return (
     <Head>
+      <title>Xpost</title>
       <link rel='shortcut icon' href='/images/favicon.ico' />
       <link
         rel='apple-touch-icon'

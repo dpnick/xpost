@@ -65,12 +65,14 @@ export default function NewIntegration({
     setIsOpen((prev) => !prev);
   };
 
-  const registerIntegration = async (event: any) => {
+  const registerIntegration = async (
+    event: React.FormEvent<HTMLFormElement>
+  ) => {
     event.preventDefault();
 
     setSubmitted(true);
-    const username = event.target.username?.value;
-    const token = event.target.token.value;
+    const username = (event.target as HTMLFormElement).username?.value;
+    const token = (event.target as HTMLFormElement).token.value;
     try {
       await fetchJson(
         '/api/integration/create',

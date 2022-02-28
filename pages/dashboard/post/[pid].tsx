@@ -251,9 +251,9 @@ export default function Edit() {
           width='100%'
           height='40vh'
           onClick={triggerClickCover}
-          style={{ cursor: 'pointer' }}
           overflow='hidden'
           position='relative'
+          className='pointer'
         >
           <Image
             src={cover ?? selectedPost?.cover ?? EMPTY_IMG}

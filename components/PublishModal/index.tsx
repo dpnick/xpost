@@ -51,11 +51,12 @@ export default function PublishModal({
     setIntegrationsSelected(nextIntegrations);
   };
 
-  const onPublish = async (event: any) => {
+  const onPublish = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     setSubmitted(true);
-    const originalIntegrationId = event.target.origin.value;
+    const originalIntegrationId = (event.target as HTMLFormElement).origin
+      ?.value;
     try {
       post.content = post.content!.replaceAll('\\', '');
       const res: { url: string } = await fetchJson(

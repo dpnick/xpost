@@ -83,7 +83,6 @@ export default function ProviderList({
         {newIntegrationModal()}
         <CardList>
           {integrations.map((integration) => {
-            console.log(infos);
             const integrationInfos = infos?.find(
               ({ integrationId }) => integrationId === integration.id
             );

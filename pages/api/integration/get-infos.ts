@@ -30,9 +30,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     );
     const result = await Promise.all(promises);
     return res.status(200).json(result);
-  } catch (error: any) {
-    console.error('[api] integration', error);
-    return res.status(500).json({ statusCode: 500, message: error.message });
+  } catch (error) {
+    let message = String(error);
+    if (error instanceof Error) message = error.message;
+    return res.status(500).json({ statusCode: 500, message });
   }
 };
 

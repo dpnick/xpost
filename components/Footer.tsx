@@ -19,7 +19,7 @@ export default function Footer() {
       bg='accent'
       py='24px'
     >
-      <Box className={styles.flexCenter} pb='8px'>
+      <Box className={styles.flexCenter} pb='16px'>
         <Image src='/icon.svg' alt='xpost logo' width={35} height={35} />
         <Text fontWeight='bold' ml='4px'>
           XPost

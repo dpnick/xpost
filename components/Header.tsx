@@ -51,6 +51,9 @@ export default function Header() {
     setGreeting(nextGreeting);
   }, []);
 
+  const goDashboard = () => router.push('/dashboard');
+  const goHome = () => router.push('/');
+
   return (
     <>
       {showProfile && (
@@ -83,13 +86,11 @@ export default function Header() {
         borderBottomWidth='1px solid'
         borderBottomColor='lightgray'
       >
-        <Box
-          display='flex'
-          alignItems='center'
-          onClick={() => router.push('/dashboard')}
-        >
-          <Image src='/icon.svg' alt='xpost logo' width={35} height={35} />
-          <h3 style={{ cursor: 'pointer', marginLeft: 16 }}>
+        <Box display='flex' alignItems='center'>
+          <Box className={styles.pointer} onClick={goHome} mr='16px'>
+            <Image src='/icon.svg' alt='xpost logo' width={35} height={35} />
+          </Box>
+          <h3 className={styles.pointer} onClick={goDashboard}>
             {greeting}
             {session?.user?.name && (
               <span>

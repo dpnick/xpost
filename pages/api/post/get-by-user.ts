@@ -30,22 +30,17 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           email,
         },
       },
-      select: {
-        id: true,
-        title: true,
-        updatedAt: true,
-        firstPublishedAt: true,
-        cover: true,
+      include: {
         publications: true,
-        published: true,
       },
       orderBy: [{ firstPublishedAt: 'desc' }],
       take: 10,
     });
     return res.status(200).json([...getDrafts, ...getPublished]);
-  } catch (error: any) {
-    console.error('[api] post', error);
-    return res.status(500).json({ statusCode: 500, message: error.message });
+  } catch (error) {
+    let message = String(error);
+    if (error instanceof Error) message = error.message;
+    return res.status(500).json({ statusCode: 500, message });
   }
 };
 
