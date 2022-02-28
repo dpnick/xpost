@@ -7,7 +7,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { EMPTY_IMG } from 'pages/dashboard';
 import React from 'react';
-import ChipButton from './ChipButton';
+import ChipButton from '../ChipButton';
 
 interface PublishedCardProps {
   post: Post & { publications: Publication[] };
@@ -20,7 +20,11 @@ export default function PublishedCard({
 }: PublishedCardProps) {
   const { id, cover, title, firstPublishedAt, publications } = post;
 
-  const openUrl = (url: string) => {
+  const openUrl = (
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    url: string
+  ) => {
+    event.stopPropagation();
     window.open(url, '_blank');
   };
 
@@ -28,7 +32,7 @@ export default function PublishedCard({
     <Link
       href={{
         pathname: `dashboard/post/[id]`,
-        query: { id, isPublished: true },
+        query: { id },
       }}
       passHref
     >
@@ -73,7 +77,7 @@ export default function PublishedCard({
                   <ChipButton
                     key={publication.id}
                     label={`${integration.provider.displayName} - ${integration.username}`}
-                    callback={() => openUrl(publication.url)}
+                    callback={(event) => openUrl(event, publication.url)}
                     color='white'
                     background={integration.provider.color}
                   />

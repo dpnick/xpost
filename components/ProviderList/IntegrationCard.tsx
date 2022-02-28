@@ -1,10 +1,10 @@
 import Box from '@components/Box';
+import useProviders from '@hooks/useProviders';
 import fetchJson from '@lib/fetchJson';
 import { IntegrationInfos } from '@models/integration';
 import { Integration, Provider } from '@prisma/client';
 import styles from '@styles/Dashboard.module.scss';
 import Image from 'next/image';
-import { useRouter } from 'next/router';
 import React from 'react';
 import toast from 'react-hot-toast';
 import { AiFillQuestionCircle } from 'react-icons/ai';
@@ -25,7 +25,7 @@ export default function IntegrationCard({
   provider,
   infos,
 }: IntegrationCardProps) {
-  const router = useRouter();
+  const { refresh } = useProviders();
 
   const deleteIntegration = async (toastId: string) => {
     try {
@@ -42,7 +42,7 @@ export default function IntegrationCard({
         },
         true
       );
-      router.replace(router.asPath);
+      refresh();
     } catch {
       toast.error('Something went wrong while deleting');
     }

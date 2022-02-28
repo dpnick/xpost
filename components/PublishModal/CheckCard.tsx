@@ -5,11 +5,19 @@ import styles from '@styles/Dashboard.module.scss';
 import Image from 'next/image';
 import React, { useState } from 'react';
 import { GoCheck } from 'react-icons/go';
+import styled from 'styled-components';
 
 interface CheckCardProps {
   integration: Integration & { provider: Provider };
   onToggle: (integration: Integration & { provider: Provider }) => void;
 }
+
+const Container = styled(Box)`
+  &:hover {
+    color: ${({ theme }) => theme.colors.primary};
+    border: 1px solid ${({ theme }) => theme.colors.primary};
+  }
+`;
 
 export default function CheckCard({ integration, onToggle }: CheckCardProps) {
   const [isChecked, setIsChecked] = useState<boolean>(false);
@@ -21,7 +29,7 @@ export default function CheckCard({ integration, onToggle }: CheckCardProps) {
   };
 
   return (
-    <Box
+    <Container
       key={integration.id}
       className={`${styles.clickableCard} ${styles.flexCenter}`}
       onClick={toggleChecked}
@@ -52,6 +60,6 @@ export default function CheckCard({ integration, onToggle }: CheckCardProps) {
           <GoCheck size={60} color='white' className={styles.absoluteCenter} />
         </Box>
       )}
-    </Box>
+    </Container>
   );
 }

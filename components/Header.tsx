@@ -1,10 +1,13 @@
 import styles from '@styles/Dashboard.module.scss';
-import { useSession } from 'next-auth/react';
+import { signOut, useSession } from 'next-auth/react';
 import Image from 'next/image';
 import router from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { AiOutlineUser } from 'react-icons/ai';
+import styled from 'styled-components';
 import Box from './Box';
+import Button from './Button';
+import Modal from './Modal';
 import Text from './Text';
 
 enum Greetings {
@@ -13,9 +16,29 @@ enum Greetings {
   EVENING = 'Good evening',
 }
 
+const ErrorButton = styled(Button)`
+  background-color: white;
+  color: red;
+  border: 1px solid red;
+`;
+
+const StyledInput = styled.input`
+  width: 100%;
+  height: 40px;
+  margin-top: 4px;
+  margin-bottom: 16px;
+  padding: 0 16px;
+  border: 1px solid lightgray;
+  background: ${({ theme }) => theme.colors.accent};
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: not-allowed;
+`;
+
 export default function Header() {
   const { data: session } = useSession();
   const [greeting, setGreeting] = useState<string>();
+  const [showProfile, setShowProfile] = useState<boolean>(false);
 
   useEffect(() => {
     let nextGreeting = Greetings.EVENING;
@@ -29,65 +52,87 @@ export default function Header() {
   }, []);
 
   return (
-    <Box
-      display='flex'
-      justifyContent='space-between'
-      alignItems='center'
-      bg='accent'
-      paddingX='3vw'
-      borderBottom='2px solid white'
-      height='80px'
-      borderBottomWidth='1px solid'
-      borderBottomColor='lightgray'
-    >
+    <>
+      {showProfile && (
+        <Modal onClose={() => setShowProfile(false)}>
+          <Box
+            display='flex'
+            flexDirection='column'
+            justifyContent='space-between'
+            height='100%'
+            py='16px'
+          >
+            <Box>
+              <Text color='gray'>Username</Text>
+              <StyledInput disabled value={session?.user?.name ?? '-'} />
+              <Text color='gray'>Email</Text>
+              <StyledInput disabled value={session?.user?.email ?? '-'} />
+            </Box>
+            <ErrorButton label='Sign out' onClick={() => signOut()} />
+          </Box>
+        </Modal>
+      )}
       <Box
         display='flex'
+        justifyContent='space-between'
         alignItems='center'
-        onClick={() => router.push('/dashboard')}
+        bg='accent'
+        paddingX='3vw'
+        borderBottom='2px solid white'
+        height='80px'
+        borderBottomWidth='1px solid'
+        borderBottomColor='lightgray'
       >
-        <Image src='/icon.svg' alt='Share blog Logo' width={35} height={35} />
-        <h3 style={{ cursor: 'pointer', marginLeft: 16 }}>
-          {greeting}
-          {session?.user?.name && (
-            <span>
-              ,
-              <Text
-                textTransform='capitalize'
-                fontWeight='bold'
-                color='primary'
-                display='unset'
-              >
-                &nbsp;{session.user.name}
-              </Text>
-            </span>
-          )}
-        </h3>
-      </Box>
-      <Box display='flex'>
         <Box
-          className={styles.pointer}
-          position='relative'
-          borderRadius='50%'
-          width={35}
-          height={35}
           display='flex'
-          justifyContent='center'
           alignItems='center'
-          bg='white'
-          overflow='hidden'
+          onClick={() => router.push('/dashboard')}
         >
-          {session?.user?.image ? (
-            <Image
-              src={session.user.image}
-              alt='user image'
-              layout='fill'
-              objectFit='cover'
-            />
-          ) : (
-            <AiOutlineUser color='black' />
-          )}
+          <Image src='/icon.svg' alt='xpost logo' width={35} height={35} />
+          <h3 style={{ cursor: 'pointer', marginLeft: 16 }}>
+            {greeting}
+            {session?.user?.name && (
+              <span>
+                ,
+                <Text
+                  textTransform='capitalize'
+                  fontWeight='bold'
+                  color='primary'
+                  display='unset'
+                >
+                  &nbsp;{session.user.name}
+                </Text>
+              </span>
+            )}
+          </h3>
+        </Box>
+        <Box display='flex'>
+          <Box
+            className={styles.pointer}
+            position='relative'
+            borderRadius='50%'
+            width={35}
+            height={35}
+            display='flex'
+            justifyContent='center'
+            alignItems='center'
+            bg='white'
+            overflow='hidden'
+          >
+            {session?.user?.image ? (
+              <Image
+                src={session.user.image}
+                alt='user image'
+                layout='fill'
+                objectFit='cover'
+                onClick={() => setShowProfile(true)}
+              />
+            ) : (
+              <AiOutlineUser color='black' />
+            )}
+          </Box>
         </Box>
       </Box>
-    </Box>
+    </>
   );
 }

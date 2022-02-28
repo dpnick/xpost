@@ -11,6 +11,7 @@ interface IThemeContext {
 
 export const ThemeContext = createContext<IThemeContext>({
   isDarkTheme: undefined,
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   switchTheme: () => {},
 });
 

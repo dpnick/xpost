@@ -40,8 +40,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
       original.isCanonical = true;
       publicationsToCreate.push(original);
-
-      console.log(original);
       url = original.url;
 
       const otherIntegrations = integrations.filter(
@@ -58,8 +56,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         );
 
         const result = await Promise.all(promises);
-        console.log(result);
-
         publicationsToCreate = [...publicationsToCreate, ...result];
       }
 

@@ -1,14 +1,14 @@
+import Button from '@components/Button';
 import Collapse from '@components/Collapse';
 import Modal from '@components/Modal';
 import NewIntegration from '@components/NewIntegration.tsx';
-import fetchJson from '@lib/fetchJson';
+import useProviders from '@hooks/useProviders';
+import fetchSwr from '@lib/fetchSwr';
 import { IntegrationInfos } from '@models/integration';
 import { Integration, Provider } from '@prisma/client';
-import styles from '@styles/Dashboard.module.scss';
-import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
-import toast from 'react-hot-toast';
+import React, { useState } from 'react';
 import styled from 'styled-components';
+import useSWR, { Fetcher } from 'swr';
 import Box from '../Box';
 import Text from '../Text';
 import IntegrationCard from './IntegrationCard';
@@ -37,37 +37,15 @@ export default function ProviderList({
   providers,
   integrations,
 }: ProviderListProps) {
-  const router = useRouter();
-  const [infos, setInfos] = useState<IntegrationInfos[]>();
+  const { refresh } = useProviders();
   const [selectedProvider, setSelectedProvider] = useState<Provider | null>(
     null
   );
 
   const [showNewProviders, setShowNewProviders] = useState<boolean>(false);
 
-  useEffect(() => {
-    const getInfos = async () => {
-      if (integrations?.length > 0) {
-        try {
-          const result: IntegrationInfos[] = await fetchJson(
-            '/api/integration/get-infos',
-            {
-              method: 'POST',
-              body: JSON.stringify({
-                integrations,
-              }),
-              headers: { 'Content-type': 'application/json' },
-            }
-          );
-          setInfos(result);
-        } catch {
-          toast.error('Something went wrong getting integration infos');
-        }
-      }
-    };
-
-    getInfos();
-  }, [integrations]);
+  const infosFetch: Fetcher<IntegrationInfos[]> = fetchSwr;
+  const { data: infos } = useSWR('/api/integration/get-infos', infosFetch);
 
   const toggleNewProviders = () => {
     setShowNewProviders((prev) => !prev);
@@ -80,8 +58,9 @@ export default function ProviderList({
 
   const onIntegrationSuccess = () => {
     setSelectedProvider(null);
+    setShowNewProviders(false);
     document.body.classList.remove('modal-open');
-    router.replace(router.asPath);
+    refresh();
   };
 
   const newIntegrationModal = () => {
@@ -104,6 +83,7 @@ export default function ProviderList({
         {newIntegrationModal()}
         <CardList>
           {integrations.map((integration) => {
+            console.log(infos);
             const integrationInfos = infos?.find(
               ({ integrationId }) => integrationId === integration.id
             );
@@ -119,15 +99,10 @@ export default function ProviderList({
         </CardList>
 
         <Box display='flex' justifyContent='center'>
-          <Box
-            p='12px 16px'
-            bg='primary'
-            color='white'
+          <Button
+            label={showNewProviders ? 'Hide providers' : 'Add new providers'}
             onClick={toggleNewProviders}
-            className={styles.button}
-          >
-            {showNewProviders ? 'Hide providers' : 'Add new providers'}
-          </Box>
+          />
         </Box>
         <Collapse isOpen={showNewProviders}>
           <Box display='flex' justifyContent='center'>

@@ -1,8 +1,9 @@
 import prisma from '@lib/prisma';
 import { NextApiRequest, NextApiResponse } from 'next';
+import { getSession } from 'next-auth/react';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  const session = req.body?.session;
+  const session = await getSession({ req });
 
   if (!session) {
     return res.status(401).json({
@@ -19,15 +20,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           email,
         },
       },
-      select: {
-        id: true,
-        title: true,
-        content: true,
-        updatedAt: true,
-        cover: true,
-      },
       orderBy: [{ updatedAt: 'desc' }],
-      take: 10,
     });
 
     const getPublished = await prisma.post.findMany({
@@ -44,11 +37,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         firstPublishedAt: true,
         cover: true,
         publications: true,
+        published: true,
       },
       orderBy: [{ firstPublishedAt: 'desc' }],
       take: 10,
     });
-    return res.status(200).json({ drafts: getDrafts, published: getPublished });
+    return res.status(200).json([...getDrafts, ...getPublished]);
   } catch (error: any) {
     console.error('[api] post', error);
     return res.status(500).json({ statusCode: 500, message: error.message });

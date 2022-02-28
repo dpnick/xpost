@@ -7,7 +7,7 @@ const Home: NextPage = () => {
   return (
     <div className={styles.container}>
       <Head>
-        <title>blog share</title>
+        <title>Xpost</title>
         <meta name='description' content='Cross posting your blog articles' />
       </Head>
 

@@ -17,6 +17,17 @@ export default function Collapse({ isOpen, children }: CollapseProps) {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    if (!height || !isOpen || !ref.current) return;
+    const resizeObserver = new ResizeObserver((el) => {
+      setHeight(el[0].contentRect.height);
+    });
+    resizeObserver.observe(ref.current);
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, [height, isOpen]);
+
+  useEffect(() => {
     let nextHeight = 0;
     if (isOpen && ref.current) {
       nextHeight = ref.current?.getBoundingClientRect().height;

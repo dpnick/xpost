@@ -1,8 +1,8 @@
 import toast from 'react-hot-toast';
 
-export default async function fetchJson<T>(
+export default function fetchJson<T>(
   url: string,
-  init?: RequestInit | undefined,
+  init?: RequestInit,
   showToast?: boolean,
   customToasts?: { loading: string; success: string; error: string }
 ): Promise<T> {

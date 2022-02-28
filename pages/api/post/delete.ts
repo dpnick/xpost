@@ -4,7 +4,8 @@ import { getSession } from 'next-auth/react';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSession({ req });
-  const pid = req.body?.pid;
+
+  const postId: string = req.body?.postId;
 
   if (!session) {
     return res.status(401).json({
@@ -12,20 +13,20 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     });
   }
 
+  if (!postId) {
+    return res.status(422).json({
+      message: 'Missing parameters',
+    });
+  }
+
   try {
-    const email = session.user!.email ?? undefined;
-    const getPost = await prisma.post.findFirst({
+    const deleted = await prisma.post.delete({
       where: {
-        id: pid,
-        user: {
-          email,
-        },
-      },
-      include: {
-        publications: true,
+        id: postId,
       },
     });
-    return res.status(200).json(getPost);
+
+    return res.status(200).json(deleted);
   } catch (error: any) {
     console.error('[api] post', error);
     return res.status(500).json({ statusCode: 500, message: error.message });

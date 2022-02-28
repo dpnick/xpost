@@ -1,4 +1,5 @@
 import Box from '@components/Box';
+import Text from '@components/Text';
 import styles from '@styles/Dashboard.module.scss';
 import React from 'react';
 import { IconType } from 'react-icons';
@@ -30,8 +31,8 @@ export default function ChipButton({
       alignItems='center'
       className={styles.button}
     >
-      {label}
-      {Icon && <Icon size={16} color={color} style={{ marginLeft: 4 }} />}
+      <Text mr={Icon ? '4px' : 0}>{label}</Text>
+      {Icon && <Icon size={16} color={color} />}
     </Box>
   );
 }

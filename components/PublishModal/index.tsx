@@ -1,8 +1,8 @@
 import Box from '@components/Box';
-import ChipButton from '@components/PostList/ChipButton';
+import ChipButton from '@components/ChipButton';
+import usePosts from '@hooks/usePosts';
 import fetchJson from '@lib/fetchJson';
 import { Integration, Post, Provider } from '@prisma/client';
-import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import { BsTwitter } from 'react-icons/bs';
 import styled from 'styled-components';
@@ -29,7 +29,7 @@ export default function PublishModal({
   post,
   integrations,
 }: PublishModalProps) {
-  const router = useRouter();
+  const { refresh } = usePosts();
   const [successUrl, setSuccessUrl] = useState<string>();
   const [submitted, setSubmitted] = useState<boolean>(false);
   const [integrationsSelected, setIntegrationsSelected] = useState<
@@ -57,6 +57,7 @@ export default function PublishModal({
     setSubmitted(true);
     const originalIntegrationId = event.target.origin.value;
     try {
+      post.content = post.content!.replaceAll('\\', '');
       const res: { url: string } = await fetchJson(
         '/api/post/publish',
         {
@@ -75,8 +76,8 @@ export default function PublishModal({
           error: 'Please make sure your token is valid',
         }
       );
-      router.replace(router.asPath);
       setSuccessUrl(res.url);
+      refresh();
     } catch {
       setSubmitted(false);
     }
@@ -102,6 +103,7 @@ export default function PublishModal({
         flexDirection='column'
         justifyContent='center'
         alignItems='center'
+        py='16px'
       >
         <Text fontSize='1.2em' fontWeight='bold'>
           Congrats for your new article 🚀
@@ -124,7 +126,7 @@ export default function PublishModal({
       flexDirection='column'
       justifyContent='space-between'
       height='100%'
-      p={0}
+      p='16px 0'
     >
       <form onSubmit={onPublish} style={{ width: '100%' }}>
         {integrations?.length > 0 ? (

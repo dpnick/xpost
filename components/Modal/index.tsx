@@ -54,7 +54,7 @@ export default function Modal({ onClose, children }: ModalProps) {
           <Box display='flex' justifyContent='flex-end'>
             <IoMdClose onClick={handleCloseClick} className={styles.pointer} />
           </Box>
-          <Box pt='16px'>{children}</Box>
+          <Box height='100%'>{children}</Box>
         </Box>
       </ContentContainer>
     </ModalOverlay>

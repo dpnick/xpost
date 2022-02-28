@@ -98,9 +98,14 @@ export default function NewIntegration({
   };
 
   return (
-    <Box display='flex' alignItems='center' flexDirection='column'>
+    <Box display='flex' alignItems='center' flexDirection='column' py='16px'>
       <Box>
-        <Image src={logoUrl!.toString()} width={100} height={100} />
+        <Image
+          src={logoUrl!.toString()}
+          alt='provider logo'
+          width={100}
+          height={100}
+        />
       </Box>
       <Text
         className='name'

@@ -1,5 +1,7 @@
 import Box from '@components/Box';
 import Text from '@components/Text';
+import usePosts from '@hooks/usePosts';
+import fetchJson from '@lib/fetchJson';
 import { Post } from '@prisma/client';
 import styles from '@styles/Dashboard.module.scss';
 import { formatDistanceToNow, parseISO } from 'date-fns';
@@ -7,9 +9,11 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { EMPTY_IMG } from 'pages/dashboard';
 import React from 'react';
+import toast from 'react-hot-toast';
+import { AiFillQuestionCircle } from 'react-icons/ai';
 import { BsArrowUpRight } from 'react-icons/bs';
 import styled from 'styled-components';
-import ChipButton from './ChipButton';
+import ChipButton from '../ChipButton';
 
 interface DraftCardProps {
   draft: Post;
@@ -27,7 +31,8 @@ const PostCard = styled(Box)`
 `;
 
 export default function DraftCard({ draft, selectPost }: DraftCardProps) {
-  const { id, published, cover, title, content, updatedAt } = draft;
+  const { id, cover, title, content, updatedAt } = draft;
+  const { refresh } = usePosts();
 
   const onPublish = (event: React.MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
@@ -35,11 +40,48 @@ export default function DraftCard({ draft, selectPost }: DraftCardProps) {
     selectPost(draft);
   };
 
+  const onDelete = async (toastId: string) => {
+    try {
+      toast.dismiss(toastId);
+      await fetchJson(
+        '/api/post/delete',
+        {
+          method: 'POST',
+          body: JSON.stringify({
+            postId: id,
+          }),
+          headers: { 'Content-type': 'application/json' },
+        },
+        true
+      );
+      refresh();
+    } catch {
+      toast.error('Please retry later');
+    }
+  };
+
+  const showConfirm = (event: React.MouseEvent<HTMLDivElement>) => {
+    event.stopPropagation();
+    toast(
+      (ref) => (
+        <Box>
+          <span>
+            Confirm to delete &nbsp;
+            <button onClick={() => onDelete(ref.id)}>OK</button>
+          </span>
+        </Box>
+      ),
+      {
+        icon: <AiFillQuestionCircle color='orange' />,
+      }
+    );
+  };
+
   return (
     <Link
       href={{
         pathname: `dashboard/post/[id]`,
-        query: { id, isPublished: published },
+        query: { id },
       }}
       passHref
     >
@@ -80,7 +122,7 @@ export default function DraftCard({ draft, selectPost }: DraftCardProps) {
             />
             <ChipButton
               label='Delete'
-              callback={() => console.log('delete')}
+              callback={showConfirm}
               color='red'
               background='unset'
             />
