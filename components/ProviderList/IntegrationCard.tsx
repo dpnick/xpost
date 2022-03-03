@@ -35,7 +35,6 @@ export default function IntegrationCard({
         {
           method: 'POST',
           body: JSON.stringify({
-            token: integration.token,
             integrationId: integration.id,
           }),
           headers: { 'Content-type': 'application/json' },

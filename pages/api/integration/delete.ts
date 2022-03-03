@@ -5,7 +5,6 @@ import { getSession } from 'next-auth/react';
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSession({ req });
 
-  const token: string = req.body?.token;
   const integrationId: string = req.body?.integrationId;
 
   if (!session) {
@@ -14,7 +13,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     });
   }
 
-  if (!token || !integrationId) {
+  if (!integrationId) {
     return res.status(422).json({
       message: 'Missing parameters',
     });

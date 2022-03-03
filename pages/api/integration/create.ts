@@ -1,3 +1,4 @@
+import { decrypt } from '@lib/encrypt';
 import prisma from '@lib/prisma';
 import providers from '@lib/providers';
 import { Integration, ProviderName } from '@prisma/client';
@@ -27,8 +28,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const email = session.user!.email ?? undefined;
 
-    const userData: Partial<Integration> = await providers[providerName].init({
+    const decryptedToken = decrypt(
       token,
+      process.env.NEXT_PUBLIC_INTEGRATION_SECRET!
+    );
+    const userData: Partial<Integration> = await providers[providerName].init({
+      token: decryptedToken,
       username,
     });
 

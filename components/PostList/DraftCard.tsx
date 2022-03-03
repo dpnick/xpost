@@ -80,7 +80,7 @@ export default function DraftCard({ draft, selectPost }: DraftCardProps) {
   return (
     <Link
       href={{
-        pathname: `dashboard/post/[id]`,
+        pathname: '/dashboard/post/[id]',
         query: { id },
       }}
       passHref
