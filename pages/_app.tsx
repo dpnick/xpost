@@ -64,6 +64,7 @@ function FaviconHead() {
   return (
     <Head>
       <title>Xpost</title>
+      <meta name='viewport' content='initial-scale=1, width=device-width' />
       <link rel='shortcut icon' href='/images/favicon.ico' />
       <link
         rel='apple-touch-icon'

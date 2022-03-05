@@ -8,6 +8,7 @@ import styled from 'styled-components';
 import Box from './Box';
 import Button from './Button';
 import Modal from './Modal';
+import StyledInput from './StyledInput';
 import Text from './Text';
 
 enum Greetings {
@@ -20,19 +21,6 @@ const ErrorButton = styled(Button)`
   background-color: white;
   color: red;
   border: 1px solid red;
-`;
-
-const StyledInput = styled.input`
-  width: 100%;
-  height: 40px;
-  margin-top: 4px;
-  margin-bottom: 16px;
-  padding: 0 16px;
-  border: 1px solid lightgray;
-  background: ${({ theme }) => theme.colors.accent};
-  border-radius: 4px;
-  font-weight: bold;
-  cursor: not-allowed;
 `;
 
 export default function Header() {

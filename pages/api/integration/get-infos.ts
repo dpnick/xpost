@@ -36,6 +36,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const result = await Promise.all(promises);
     return res.status(200).json(result);
   } catch (error) {
+    console.log(error);
     let message = String(error);
     if (error instanceof Error) message = error.message;
     return res.status(500).json({ statusCode: 500, message });

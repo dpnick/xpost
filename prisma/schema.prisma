@@ -90,6 +90,8 @@ model Post {
   title          String?    @db.Text
   content         String?   @db.LongText
   cover         String?
+  slug          String?
+  tags          String?    @db.Text
   userId       String
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   firstPublishedAt      DateTime?

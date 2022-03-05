@@ -10,6 +10,7 @@ const PublishButton = styled.input`
   border-radius: 4px;
   cursor: pointer;
   margin-top: 16px;
+  margin-bottom: 16px;
   transition: background 0.5s ease-in-out;
   &:active {
     opacity: 0.4;

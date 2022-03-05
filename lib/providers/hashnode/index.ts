@@ -1,5 +1,7 @@
 import fetchJson from '@lib/fetchJson';
 import { IntegrationInfos } from '@models/integration';
+import { SelectOption } from '@models/selectOption';
+import { Tag } from '@models/tag';
 import { Integration, Post, Provider, Publication } from '@prisma/client';
 import GET_INFOS from './queries/getInfos';
 import GET_PUBLICATION_ID from './queries/getPublicationId';
@@ -9,6 +11,7 @@ const HASHNODE_URL = 'https://api.hashnode.com/';
 
 interface PublishInput {
   title: string;
+  slug: string;
   coverImageURL: string;
   contentMarkdown: string;
   tags: { _id: string }[];
@@ -82,17 +85,22 @@ function getUserInfos({
 
 function publishNewArticle(
   post: Post,
+  tags: SelectOption[],
   integration: Integration & { provider: Provider },
   originalUrl?: string
 ): Promise<Omit<Publication, 'id'>> {
+  const hashnodeCompatibleTags: Tag[] = tags
+    ?.filter((tag) => !tag.__isNew__)
+    ?.map((post) => ({
+      _id: post.value,
+      name: post.label,
+    }));
   const input: PublishInput = {
     title: post.title!,
+    slug: post.slug!,
     coverImageURL: post.cover!,
     contentMarkdown: post.content!,
-    tags: [
-      { _id: '56744723958ef13879b952d7' },
-      { _id: '56744721958ef13879b94ae7' },
-    ],
+    tags: hashnodeCompatibleTags ?? [],
   };
 
   if (originalUrl) {

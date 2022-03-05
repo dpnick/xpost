@@ -1,6 +1,7 @@
 import { decrypt } from '@lib/encrypt';
 import prisma from '@lib/prisma';
 import providers from '@lib/providers';
+import { SelectOption } from '@models/selectOption';
 import { Integration, Post, Provider, Publication } from '@prisma/client';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getSession } from 'next-auth/react';
@@ -9,6 +10,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSession({ req });
 
   const post: Post = req.body?.post;
+  const tags: SelectOption[] = req.body?.tags;
   const integrations: (Integration & { provider: Provider })[] =
     req.body?.integrations;
   const originalIntegrationId: string = req.body?.originalIntegrationId;
@@ -41,7 +43,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       // start by publishing original one
       const original = await providers[
         integrationOriginal.provider.name
-      ].publishNewArticle(post, integrationOriginal);
+      ].publishNewArticle(post, tags, integrationOriginal);
 
       original.isCanonical = true;
       publicationsToCreate.push(original);
@@ -59,6 +61,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
           );
           return providers[integration.provider.name].publishNewArticle(
             post,
+            tags,
             integration,
             original.url
           );

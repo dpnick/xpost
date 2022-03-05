@@ -1,6 +1,7 @@
 import Box from '@components/Box';
 import Collapse from '@components/Collapse';
 import ListHeader from '@components/PostList/ListHeader';
+import StyledInput from '@components/StyledInput';
 import Text from '@components/Text';
 import { encrypt } from '@lib/encrypt';
 import fetchJson from '@lib/fetchJson';
@@ -25,20 +26,6 @@ const StyledForm = styled.form`
 const CollapseContainer = styled(Box)`
   width: 100%;
   margin-top: 32px;
-`;
-
-const StyledInput = styled.input`
-  width: 100%;
-  height: 40px;
-  border: 1px solid lightgray;
-  margin-top: 4px;
-  margin-bottom: 16px;
-  padding: 0 16px;
-  background: ${({ theme }) => theme.colors.accent};
-  border-radius: 4px;
-  &:focus {
-    outline: solid 2px ${({ theme }) => theme.colors.primary};
-  }
 `;
 
 const RegisterButton = styled.input`
