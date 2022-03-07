@@ -133,7 +133,7 @@ export default function NewIntegration({
       <StyledForm onSubmit={registerIntegration}>
         {name?.toString().toLowerCase() === 'hashnode' && (
           <>
-            <Text color='gray' fontWeight='bold'>
+            <Text color='gray.500' fontWeight='bold'>
               Username (without @)
             </Text>
             <StyledInput
@@ -145,7 +145,7 @@ export default function NewIntegration({
             />
           </>
         )}
-        <Text color='gray' fontWeight='bold'>
+        <Text color='gray.500' fontWeight='bold'>
           Token
         </Text>
         <StyledInput

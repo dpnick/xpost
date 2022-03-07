@@ -16,7 +16,7 @@ const PublishButton = styled.input`
     opacity: 0.4;
   }
   &:disabled {
-    background: lightgray;
+    background: ${({ theme }) => theme.colors.gray[300]};
   }
 `;
 

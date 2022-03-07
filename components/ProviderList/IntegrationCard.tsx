@@ -11,6 +11,7 @@ import { AiFillQuestionCircle } from 'react-icons/ai';
 import { BsCheckCircleFill } from 'react-icons/bs';
 import { MdDelete, MdOutlineAddReaction, MdPostAdd } from 'react-icons/md';
 import { RiUserFollowLine } from 'react-icons/ri';
+import styled from 'styled-components';
 import Text from '../Text';
 import Stat from './Stat';
 
@@ -19,6 +20,14 @@ interface IntegrationCardProps {
   provider: Provider;
   infos: IntegrationInfos;
 }
+
+const StyledTrash = styled(MdDelete)`
+  cursor: pointer;
+  transition: color 0.2s ease-in-out;
+  &:hover {
+    color: ${({ theme }) => theme.colors.danger};
+  }
+`;
 
 export default function IntegrationCard({
   integration,
@@ -76,7 +85,9 @@ export default function IntegrationCard({
         justifyContent='space-between'
         bg='accent'
         p='8px'
-        borderBottom='1px solid lightgray'
+        borderBottomStyle='solid'
+        borderBottomColor='gray.300'
+        borderBottomWidth='2px'
         borderTopLeftRadius='8px'
         borderTopRightRadius='8px'
       >
@@ -92,11 +103,7 @@ export default function IntegrationCard({
           </Text>
         </Box>
         <Box display='flex' alignItems='center'>
-          <MdDelete
-            size={24}
-            onClick={showConfirm}
-            className={styles.pointer}
-          />
+          <StyledTrash size={24} onClick={showConfirm} />
         </Box>
       </Box>
       <Box mt='16px' className={styles.flexCenter}>

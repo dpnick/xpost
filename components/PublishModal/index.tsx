@@ -321,7 +321,7 @@ export default function PublishModal({
             )}
           </div>
         ) : (
-          <Text color='gray'>
+          <Text color='gray.500'>
             Connect your first blogging platform to be able to publish!
           </Text>
         )}

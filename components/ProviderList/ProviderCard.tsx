@@ -20,9 +20,6 @@ const Container = styled(Box)`
   &:hover {
     color: ${({ theme }) => theme.colors.primary};
     border: 1px solid ${({ theme }) => theme.colors.primary};
-    .name {
-      text-decoration: underline;
-    }
   }
 `;
 

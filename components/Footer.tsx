@@ -25,7 +25,7 @@ export default function Footer() {
           XPost
         </Text>
       </Box>
-      <Text color='gray' pb='4px'>
+      <Text color='gray.500' pb='4px'>
         Interested in contributing / following this product ?
       </Text>
       <StyledLink
@@ -35,7 +35,7 @@ export default function Footer() {
       >
         Join me on <BsTwitter />
       </StyledLink>
-      <Text pt='16px' color='gray'>
+      <Text pt='16px' color='gray.500'>
         © Copyright 2022 XPost.
       </Text>
     </Box>

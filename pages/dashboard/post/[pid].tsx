@@ -303,6 +303,7 @@ export default function Edit() {
           defaultValue={selectedPost?.content ?? undefined}
           onChange={udpateContent}
           uploadImage={uploadImg}
+          disableExtensions={['container_notice']}
           embeds={[
             {
               title: 'Youtube',

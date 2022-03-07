@@ -29,7 +29,7 @@ export default function ListHeader({
       display='flex'
       justifyContent='space-between'
       alignItems='center'
-      borderBottom={`1px solid ${isOpen ? 'lightgray' : 'transparent'}`}
+      borderBottom={`1px solid ${isOpen ? 'gray.300' : 'transparent'}`}
       padding='16px'
       borderRadius='8px'
       className={styles.pointer}

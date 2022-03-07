@@ -46,7 +46,12 @@ export default function CheckCard({ integration, onToggle }: CheckCardProps) {
       <Text mt='8px' fontWeight='bold' fontSize='1.2em'>
         {integration.provider.displayName}
       </Text>
-      <Text mt='8px' fontWeight='bold' color='gray' textTransform='capitalize'>
+      <Text
+        mt='8px'
+        fontWeight='bold'
+        color='gray.500'
+        textTransform='capitalize'
+      >
         {integration.username}
       </Text>
       {isChecked && (
