@@ -1,38 +1,46 @@
 import Box from '@components/Box';
-import Text from '@components/Text';
 import styles from '@styles/Dashboard.module.scss';
 import React from 'react';
-import { IconType } from 'react-icons';
+import styled from 'styled-components';
 
 interface ChipButtonProps {
-  label: string;
+  children: React.ReactNode;
   callback: (event: React.MouseEvent<HTMLDivElement>) => void;
-  Icon?: IconType;
   color?: string;
-  background?: string;
+  outline?: boolean;
 }
 
+const Chip = styled(Box)<{ outline?: boolean }>`
+  transition: background-color 0.2s ease-in-out, opacity 0.2s ease-in-out;
+  &:hover {
+    background-color: ${({ theme, outline, color }) =>
+      outline ? theme.colors.gray[200] : color};
+  &:active {
+    opacity: 0.7;
+  }
+`;
+
 export default function ChipButton({
-  label,
+  children,
   callback,
-  Icon,
   color,
-  background,
+  outline,
 }: ChipButtonProps) {
   return (
-    <Box
+    <Chip
+      outline={outline}
       onClick={callback}
       color={color}
-      bg={background}
-      border={`1px solid ${background === 'unset' ? color : background}`}
+      bg={outline ? 'transparent' : color}
+      borderStyle='solid'
+      borderColor={color}
       margin='4px'
       borderRadius={30}
       display='flex'
       alignItems='center'
       className={styles.button}
     >
-      <Text mr={Icon ? '4px' : 0}>{label}</Text>
-      {Icon && <Icon size={16} color={color} />}
-    </Box>
+      {children}
+    </Chip>
   );
 }

@@ -28,3 +28,14 @@ a {
 .pointer {
   cursor: pointer;
 }
+
+.canvas {
+  background-color: transparent;
+  height: 100%;
+  left: 0px;
+  pointer-events: none;
+  position: fixed;
+  top: 0px;
+  width: 100%;
+  // z-index: -1;
+}

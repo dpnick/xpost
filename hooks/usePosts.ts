@@ -1,10 +1,13 @@
 import fetchSwr from '@lib/fetchSwr';
 import { Post } from '@prisma/client';
-import useSWR, { Fetcher } from 'swr';
+import useSWRImmutable, { Fetcher } from 'swr';
 
 export default function usePosts(selectedId?: string) {
   const postFetch: Fetcher<Post[]> = fetchSwr;
-  const { data, error, mutate } = useSWR('/api/post/get-by-user', postFetch);
+  const { data, error, mutate } = useSWRImmutable(
+    '/api/post/get-by-user',
+    postFetch
+  );
 
   return {
     posts: data,

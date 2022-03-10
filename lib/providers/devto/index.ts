@@ -93,7 +93,7 @@ function publishNewArticle(
   integration: Integration & { provider: Provider },
   originalUrl?: string
 ): Promise<Omit<Publication, 'id'>> {
-  const devTags = tags?.map((tag) => tag.label);
+  const devTags = tags?.map((tag) => tag.label.split(' ').join(''));
   const input: ArticleToCreate = {
     article: {
       title: post.title!,
@@ -115,16 +115,22 @@ function publishNewArticle(
       'api-key': integration.token,
     },
     body: JSON.stringify(input),
-  }).then(({ url }) => {
-    const publication: Omit<Publication, 'id'> = {
-      publishedAt: new Date(),
-      url,
-      postId: post.id,
-      integrationId: integration.id,
-      isCanonical: !originalUrl,
-    };
-    return publication;
-  });
+  })
+    .then(({ url }) => {
+      const publication: Omit<Publication, 'id'> = {
+        publishedAt: new Date(),
+        url,
+        postId: post.id,
+        integrationId: integration.id,
+        isCanonical: !originalUrl,
+      };
+      return publication;
+    })
+    .catch((error) => {
+      let message = String(error);
+      if (error instanceof Error) message = error.message;
+      throw new Error(message ?? 'An error occured publishing on dev.to');
+    });
 }
 
 export { init, getUserInfos, publishNewArticle };

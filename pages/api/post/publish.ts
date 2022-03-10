@@ -32,7 +32,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       ({ id }) => id === originalIntegrationId
     );
 
-    let url = '';
+    let publications: Publication[] = [];
     if (integrationOriginal) {
       let publicationsToCreate: Omit<Publication, 'id'>[] = [];
       integrationOriginal.token = decrypt(
@@ -41,31 +41,31 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       );
 
       // start by publishing original one
-      const original = await providers[
+      const original: Omit<Publication, 'id'> = await providers[
         integrationOriginal.provider.name
       ].publishNewArticle(post, tags, integrationOriginal);
 
       original.isCanonical = true;
       publicationsToCreate.push(original);
-      url = original.url;
 
       const otherIntegrations = integrations.filter(
         ({ id }) => id !== originalIntegrationId
       );
 
       if (otherIntegrations?.length > 0) {
-        const promises = otherIntegrations?.map((integration) => {
-          integration.token = decrypt(
-            integration.token,
-            process.env.NEXT_PUBLIC_INTEGRATION_SECRET!
-          );
-          return providers[integration.provider.name].publishNewArticle(
-            post,
-            tags,
-            integration,
-            original.url
-          );
-        });
+        const promises: Promise<Omit<Publication, 'id'>>[] =
+          otherIntegrations?.map((integration) => {
+            integration.token = decrypt(
+              integration.token,
+              process.env.NEXT_PUBLIC_INTEGRATION_SECRET!
+            );
+            return providers[integration.provider.name].publishNewArticle(
+              post,
+              tags,
+              integration,
+              original.url
+            );
+          });
 
         const result = await Promise.all(promises);
         publicationsToCreate = [...publicationsToCreate, ...result];
@@ -76,19 +76,33 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         skipDuplicates: true,
       });
 
-      await prisma.post.update({
+      const updatedUser = await prisma.post.update({
         where: {
           id: post.id,
         },
         data: {
           published: true,
           firstPublishedAt: new Date(),
+          tags:
+            tags && tags?.length > 0
+              ? tags.map((tag) => tag.label.split(' ').join('')).toString()
+              : '',
+        },
+        include: {
+          publications: {
+            where: {
+              postId: post.id,
+            },
+          },
         },
       });
+
+      publications = updatedUser?.publications;
     }
 
-    return res.status(200).json({ url });
+    return res.status(200).json({ publications });
   } catch (error) {
+    console.log(error);
     let message = String(error);
     if (error instanceof Error) message = error.message;
     return res.status(500).json({ statusCode: 500, message });

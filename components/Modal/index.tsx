@@ -1,5 +1,5 @@
 import Box from '@components/Box';
-import styles from '@styles/Dashboard.module.scss';
+import IconButton from '@components/IconButton';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { IoMdClose } from 'react-icons/io';
@@ -34,8 +34,7 @@ export default function Modal({ onClose, children }: ModalProps) {
     return () => window.removeEventListener('click', backDropHandler);
   }, [backDropHandler]);
 
-  const handleCloseClick = (event: React.MouseEvent<SVGElement>) => {
-    event.preventDefault();
+  const handleCloseClick = () => {
     document.body.classList.remove('modal-open');
     onClose();
   };
@@ -43,11 +42,15 @@ export default function Modal({ onClose, children }: ModalProps) {
   const modalContent = (
     <ModalOverlay>
       <ContentContainer ref={modalWrapperRef}>
-        <Box bg='white' height='100%' width='100%' borderRadius='8px' py='16px'>
-          <Box display='flex' justifyContent='flex-end' px='16px'>
-            <IoMdClose onClick={handleCloseClick} className={styles.pointer} />
+        <Box bg='white' height='100%' width='100%' borderRadius='8px' pt='16px'>
+          <Box display='flex' justifyContent='flex-end' height={30} px='16px'>
+            <IconButton
+              Icon={IoMdClose}
+              color='black'
+              onClick={handleCloseClick}
+            />
           </Box>
-          <Box height='100%' overflowY='auto' px='16px'>
+          <Box height='calc(100% - 30px)' overflowY='auto' px='16px'>
             {children}
           </Box>
         </Box>

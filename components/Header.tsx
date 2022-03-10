@@ -2,11 +2,14 @@ import styles from '@styles/Dashboard.module.scss';
 import { signOut, useSession } from 'next-auth/react';
 import Image from 'next/image';
 import router from 'next/router';
+import { PROD_URL } from 'pages/dashboard';
 import React, { useEffect, useState } from 'react';
 import { AiOutlineUser } from 'react-icons/ai';
+import { BsTwitter } from 'react-icons/bs';
 import styled from 'styled-components';
 import Box from './Box';
 import Button from './Button';
+import ChipButton from './ChipButton';
 import Modal from './Modal';
 import StyledInput from './StyledInput';
 import Text from './Text';
@@ -40,7 +43,15 @@ export default function Header() {
   }, []);
 
   const goDashboard = () => router.push('/dashboard');
+
   const goHome = () => router.push('/');
+
+  const shareOnTwitter = (param: string) => {
+    window.open(
+      `https://twitter.com/intent/tweet?text=${encodeURIComponent(param)}`,
+      '_blank'
+    );
+  };
 
   return (
     <>
@@ -54,6 +65,45 @@ export default function Header() {
             py='16px'
           >
             <Box>
+              <Box
+                className={styles.pointer}
+                position='relative'
+                borderRadius='50%'
+                width={80}
+                height={80}
+                display='flex'
+                justifyContent='center'
+                alignItems='center'
+                bg='white'
+                overflow='hidden'
+                margin='auto'
+              >
+                <Image
+                  src={session!.user!.image!}
+                  alt='user image'
+                  layout='fill'
+                  objectFit='cover'
+                  onClick={() => setShowProfile(true)}
+                />
+              </Box>
+              <Box my={4} display='flex' justifyContent='center'>
+                <ChipButton
+                  callback={() =>
+                    shareOnTwitter(
+                      `You should consider using Xpost, the next level content creator & technical writer productivity tool 🚀
+${PROD_URL}
+                      `
+                    )
+                  }
+                  color='#1DA1F2'
+                >
+                  <Text mr={1} color='white'>
+                    Share
+                  </Text>
+                  <BsTwitter size={16} color='white' />
+                </ChipButton>
+              </Box>
+
               <Text color='gray.500'>Username</Text>
               <StyledInput disabled value={session?.user?.name ?? '-'} />
               <Text color='gray.500'>Email</Text>

@@ -1,13 +1,15 @@
 import Box from '@components/Box';
 import ChipButton from '@components/ChipButton';
+import Confetti from '@components/Confetti';
+import PublishedCard from '@components/PostList/PublishedCard';
 import StyledInput from '@components/StyledInput';
 import usePosts from '@hooks/usePosts';
 import useTags from '@hooks/useTags';
 import useThrottle from '@hooks/useThrottle';
 import fetchJson from '@lib/fetchJson';
 import { SelectOption } from '@models/selectOption';
-import { Integration, Post, Provider } from '@prisma/client';
-import React, { useCallback, useState } from 'react';
+import { Integration, Post, Provider, Publication } from '@prisma/client';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import { BsTwitter } from 'react-icons/bs';
 import { MultiSelect } from 'react-multi-select-component';
@@ -48,7 +50,7 @@ export default function PublishModal({
 }: PublishModalProps) {
   const { tags, isLoading: tagsLoading } = useTags();
   const { refresh } = usePosts();
-  const [successUrl, setSuccessUrl] = useState<string>();
+
   const [submitted, setSubmitted] = useState<boolean>(false);
   const [integrationsSelected, setIntegrationsSelected] = useState<
     (Integration & { provider: Provider })[]
@@ -57,6 +59,17 @@ export default function PublishModal({
 
   const [unformattedSlug, setUnformattedSlug] = useState<string>('');
   const [slug, setSlug] = useState<string>(slugify(post.title ?? '-'));
+
+  // having publications means we successfully published the article
+  const [publications, setPublications] = useState<Publication[]>();
+  const successFireFn: React.MutableRefObject<(() => void) | null> =
+    useRef<() => void | null>(null);
+
+  useEffect(() => {
+    if (publications && publications?.length > 0 && successFireFn?.current) {
+      successFireFn.current();
+    }
+  }, [publications]);
 
   const slugifySlug = useCallback(() => {
     if (unformattedSlug) {
@@ -93,10 +106,15 @@ export default function PublishModal({
     const originalIntegrationId = (event.target as HTMLFormElement).origin
       ?.value;
     try {
-      post.content = post.content!.replaceAll('\\', '');
+      // regex to find empty line containing only a backslash
+      // check: https://github.com/outline/rich-markdown-editor/issues/532
+      const stripRegEx = new RegExp(/^\\\W*$/gm);
+      if (stripRegEx.test(post.content)) {
+        post.content = post.content.replaceAll(stripRegEx, '');
+      }
       post.tags = selectedTags?.map((tag) => tag.label).toString();
       post.slug = slugify(slug);
-      const res: { url: string } = await fetchJson(
+      const res: { url: string; publications: Publication[] } = await fetchJson(
         '/api/post/publish',
         {
           method: 'POST',
@@ -115,7 +133,7 @@ export default function PublishModal({
           error: 'Please make sure your token is valid',
         }
       );
-      setSuccessUrl(res.url);
+      setPublications(res.publications);
       refresh();
     } catch {
       setSubmitted(false);
@@ -167,33 +185,46 @@ export default function PublishModal({
     ));
   };
 
-  if (successUrl) {
+  if (publications) {
+    const publishedPost: Post & { publications: Publication[] } = {
+      ...post,
+      publications,
+    };
+    const canonicalUrl = publications.find((pub) => pub.isCanonical)!.url;
     const param = `I just published a new blog post titled "${
       post.title
     }", check it out ⚡️
     
-    ${successUrl ?? 'https://code-with-yannick.com'}
+    ${canonicalUrl ?? 'https://code-with-yannick.com'}
     `;
     return (
-      <Box
-        display='flex'
-        flexDirection='column'
-        justifyContent='center'
-        alignItems='center'
-        py='16px'
-      >
-        <Text fontSize='1.2em' fontWeight='bold'>
-          Congrats for your new article 🚀
-        </Text>
-        <Text my='8px'>Share it with the world</Text>
-        <ChipButton
-          label='Tweet'
-          callback={() => shareOnTwitter(param)}
-          Icon={BsTwitter}
-          color='white'
-          background='#1DA1F2'
-        />
-      </Box>
+      <>
+        <Confetti fireFromParent={successFireFn} />
+        <Box
+          display='flex'
+          flexDirection='column'
+          justifyContent='center'
+          alignItems='center'
+          height='100%'
+          py='16px'
+        >
+          <Text fontSize='1.5em' fontWeight='bold'>
+            Congrats for your new article 🚀
+          </Text>
+          <Text my='8px' color='gray.500'>
+            Share it with the world
+          </Text>
+          <ChipButton callback={() => shareOnTwitter(param)} color='#1DA1F2'>
+            <Text mr={1} color='white'>
+              Tweet
+            </Text>
+            <BsTwitter size={16} color='white' />
+          </ChipButton>
+          <Box display='flex' alignItems='center' height='100%'>
+            <PublishedCard post={publishedPost} integrations={integrations} />
+          </Box>
+        </Box>
+      </>
     );
   }
 
@@ -203,13 +234,12 @@ export default function PublishModal({
       flexDirection='column'
       justifyContent='space-between'
       height='100%'
-      pt='16px'
     >
       <form onSubmit={onPublish} style={{ width: '100%' }}>
         {integrations?.length > 0 ? (
           <div>
             <Text fontSize='1.2em' fontWeight='bold' mb='16px'>
-              Where you want to publish?
+              Where do you want to publish?
             </Text>
             <ModalIntegrationList>
               {integrations.map((integration) => (

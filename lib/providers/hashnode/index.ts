@@ -1,7 +1,6 @@
 import fetchJson from '@lib/fetchJson';
 import { IntegrationInfos } from '@models/integration';
 import { SelectOption } from '@models/selectOption';
-import { Tag } from '@models/tag';
 import { Integration, Post, Provider, Publication } from '@prisma/client';
 import GET_INFOS from './queries/getInfos';
 import GET_PUBLICATION_ID from './queries/getPublicationId';
@@ -45,7 +44,8 @@ function init({
     if (errors) {
       throw new Error(errors[0]?.message ?? 'An error occured');
     }
-    return { publicationId: data?.user?.publication?._id };
+    const { publication } = data?.user;
+    return { publicationId: publication?._id };
   });
 }
 
@@ -89,12 +89,12 @@ function publishNewArticle(
   integration: Integration & { provider: Provider },
   originalUrl?: string
 ): Promise<Omit<Publication, 'id'>> {
-  const hashnodeCompatibleTags: Tag[] = tags
+  const hashnodeCompatibleTags: { _id: string }[] = tags
     ?.filter((tag) => !tag.__isNew__)
     ?.map((post) => ({
       _id: post.value,
-      name: post.label,
     }));
+
   const input: PublishInput = {
     title: post.title!,
     slug: post.slug!,
@@ -114,7 +114,11 @@ function publishNewArticle(
   return fetchJson<{
     data: {
       createPublicationStory: {
-        post: { slug: string; publication: { domain: string } };
+        post: {
+          slug: string;
+          publication: { domain: string };
+          author: { blogHandle: string };
+        };
       };
     };
     errors: [{ message: string }];
@@ -134,7 +138,9 @@ function publishNewArticle(
     }
     const slug = data?.createPublicationStory?.post?.slug;
     const domain = data?.createPublicationStory?.post?.publication?.domain;
-    const customDomain = domain ?? `${integration.username}.hashnode.dev`;
+    const blogHandle = data?.createPublicationStory?.post?.author?.blogHandle;
+    const customDomain =
+      domain ?? `${blogHandle ?? integration.username}.hashnode.dev`;
 
     const publication: Omit<Publication, 'id'> = {
       publishedAt: new Date(),

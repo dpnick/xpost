@@ -1,5 +1,6 @@
 import Box from '@components/Box';
 import ChipButton from '@components/ChipButton';
+import IconButton from '@components/IconButton';
 import Modal from '@components/Modal';
 import PublishModal from '@components/PublishModal';
 import Spinner from '@components/Spinner';
@@ -11,7 +12,6 @@ import useThrottle from '@hooks/useThrottle';
 import fetchJson from '@lib/fetchJson';
 import { CloudinaryImg } from '@models/cloudinaryImg';
 import { Post } from '@prisma/client';
-import styles from '@styles/Dashboard.module.scss';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import React, { useCallback, useRef, useState } from 'react';
@@ -22,8 +22,9 @@ import {
   IoArrowBackCircleSharp,
   IoInformationCircleOutline,
 } from 'react-icons/io5';
+import { MdDelete } from 'react-icons/md';
 import Editor from 'rich-markdown-editor';
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 import { EMPTY_IMG } from '..';
 
 const StyledInput = styled.textarea`
@@ -32,7 +33,7 @@ const StyledInput = styled.textarea`
   min-height: 60px;
   padding: 16px;
   border: none;
-  background: ${({ theme }) => theme.colors.accent};
+  background: ${({ theme }) => theme.colors.gray[100]};
   border-radius: 4px;
   font-size: 18px;
   font-weight: bold;
@@ -45,6 +46,7 @@ const StyledInput = styled.textarea`
 export default function Edit() {
   const router = useRouter();
   const { pid } = router.query;
+  const { colors } = useTheme();
   const [showPublishModal, setShowPublishModal] = useState<boolean>(false);
   const [toUpdate, setToUpdate] = useState<Partial<Post>>();
   const [isSaving, setIsSaving] = useState<boolean>(false);
@@ -180,8 +182,7 @@ export default function Edit() {
     }
   };
 
-  const showConfirm = (event: React.MouseEvent<HTMLDivElement>) => {
-    event.stopPropagation();
+  const showConfirm = () => {
     toast(
       (ref) => (
         <Box>
@@ -225,41 +226,42 @@ export default function Edit() {
           justifyContent='space-between'
           alignItems='center'
         >
-          <IoArrowBackCircleSharp
+          <IconButton
+            Icon={IoArrowBackCircleSharp}
+            color='black'
             onClick={goBack}
-            className={styles.pointer}
             size='2em'
           />
-          <Box position='relative'>
-            {isSaving ? (
-              <Spinner width={20} height={20} icon={false} />
-            ) : (
-              <BsFillCloudCheckFill size='2em' />
+          <Box display='flex' alignItems='center'>
+            {!selectedPost?.published && (
+              <ChipButton callback={onPublish} color='primary'>
+                <Text mr={1} color='white'>
+                  Publish
+                </Text>
+                <BsArrowUpRight size={16} color='white' />
+              </ChipButton>
             )}
+            <IconButton
+              Icon={MdDelete}
+              color='black'
+              hoverColor={colors.danger}
+              onClick={showConfirm}
+            />
+            <Box display='flex' position='relative'>
+              {isSaving ? (
+                <Spinner width={20} height={20} icon={false} />
+              ) : (
+                <BsFillCloudCheckFill size={24} />
+              )}
+            </Box>
           </Box>
         </Box>
 
         <Box display='flex' alignItems='center' justifyContent='center'>
-          {selectedPost?.published ? (
+          {selectedPost?.published && (
             <>
               <IoInformationCircleOutline color='gold' size={24} />
               <Text>At the moment published article are readonly.</Text>
-            </>
-          ) : (
-            <>
-              <ChipButton
-                label='Publish'
-                callback={onPublish}
-                Icon={BsArrowUpRight}
-                color='white'
-                background='primary'
-              />
-              <ChipButton
-                label='Delete'
-                callback={showConfirm}
-                color='red'
-                background='unset'
-              />
             </>
           )}
         </Box>
@@ -272,22 +274,12 @@ export default function Edit() {
           className='pointer'
         >
           <Image
-            src={cover ?? selectedPost?.cover ?? EMPTY_IMG}
+            src={cover ?? selectedPost?.cover ?? '/images/add_cover.png'}
             alt='cover'
             layout='fill'
             objectFit='contain'
-            priority={true}
+            priority
           />
-          {!cover && !selectedPost?.cover && (
-            <Text
-              fontSize='1.2em'
-              fontWeight='bold'
-              textAlign='center'
-              className={styles.absoluteCenter}
-            >
-              Click to add a cover
-            </Text>
-          )}
         </Box>
         <input ref={coverRef} hidden type='file' onChange={handleCoverInput} />
         <StyledInput

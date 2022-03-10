@@ -25,7 +25,7 @@ const CardList = styled.div`
   box-sizing: border-box;
   padding: 16px 0;
   overflow-y: visible;
-  @media (min-width: ${({ theme }) => theme.breakpoints[0]}) {
+  @media (min-width: ${({ theme }) => theme.breakpoints[1]}) {
     display: grid;
     grid-template-columns: auto auto auto;
     grid-gap: 16px;

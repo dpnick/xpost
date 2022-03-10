@@ -9,11 +9,13 @@ export default function fetchJson<T>(
   const promise = fetch(url, init)
     .then((response) => {
       if (!response.ok) {
+        console.log(response);
         throw new Error('An error occured');
       }
       return response.json();
     })
-    .catch(() => {
+    .catch((err) => {
+      console.log(err);
       throw new Error('An error occured');
     });
 

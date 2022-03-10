@@ -57,7 +57,7 @@ model User {
 model Integration {
   id            String    @id @default(cuid())
   username          String?
-  publicationId       String?
+  publicationId       String? // useful for hashnode
   token         String
   userId       String
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
