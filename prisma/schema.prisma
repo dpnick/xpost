@@ -64,6 +64,8 @@ model Integration {
   providerId       String
   provider         Provider     @relation(fields: [providerId], references: [id], onDelete: Cascade)
   publications      Publication[]
+
+  @@unique([userId, providerId, username], name: "integration_unique_identifier")
 }
 
 // represent all available blogging providers
