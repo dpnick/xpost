@@ -1,5 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const withPWA = require('next-pwa');
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { withSentryConfig } = require('@sentry/nextjs');
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -22,4 +24,12 @@ const nextConfig = {
   },
 };
 
-module.exports = withPWA(nextConfig);
+const sentryWebpackPluginOptions = {
+  silent: true, // Suppresses all logs
+  // For all available options, see:
+  // https://github.com/getsentry/sentry-webpack-plugin#options.
+};
+module.exports = withSentryConfig(
+  withPWA(nextConfig),
+  sentryWebpackPluginOptions
+);

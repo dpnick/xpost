@@ -1,29 +1,31 @@
+import { CustomHttpError } from '@models/http';
 import toast from 'react-hot-toast';
 
 export default function fetchJson<T>(
   url: string,
   init?: RequestInit,
   showToast?: boolean,
-  customToasts?: { loading: string; success: string; error: string }
+  customToasts?: { loading: string; success: string | ((res: T) => string) }
 ): Promise<T> {
-  const promise = fetch(url, init)
-    .then((response) => {
+  const promise: Promise<T> = fetch(url, init)
+    .then(async (response) => {
+      const data = await response.json();
       if (!response.ok) {
-        console.log(response);
-        throw new Error('An error occured');
+        const error = (data && data.message) || 'An error occured';
+        return Promise.reject(error);
       }
-      return response.json();
+      return data;
     })
-    .catch((err) => {
-      console.log(err);
-      throw new Error('An error occured');
+    .catch((error) => {
+      const message = String(error);
+      throw new Error(message ?? 'An error occured');
     });
 
   if (showToast) {
     toast.promise(promise, {
       loading: customToasts?.loading ?? 'Getting ready',
       success: customToasts?.success ?? 'Here we go',
-      error: customToasts?.error ?? 'Error occured',
+      error: (err: CustomHttpError) => err.message,
     });
   }
 
