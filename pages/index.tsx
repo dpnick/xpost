@@ -5,13 +5,13 @@ import ProviderCard from '@components/ProviderList/ProviderCard';
 import Text from '@components/Text';
 import fetchJson from '@lib/fetchJson';
 import { Provider, ProviderName } from '@prisma/client';
+import styles from '@styles/Home.module.scss';
 import { useSession } from 'next-auth/react';
 import Head from 'next/head';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import toast from 'react-hot-toast';
 import { MdLooks3, MdLooksOne, MdLooksTwo } from 'react-icons/md';
-import styles from '../styles/Home.module.css';
 
 interface HomeProps {
   providers: Provider[];

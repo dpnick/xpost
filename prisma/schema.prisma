@@ -56,7 +56,7 @@ model User {
 // represent a provider integration for a user
 model Integration {
   id            String    @id @default(cuid())
-  username          String?
+  username          String
   publicationId       String? // useful for hashnode
   token         String
   userId       String
@@ -64,8 +64,20 @@ model Integration {
   providerId       String
   provider         Provider     @relation(fields: [providerId], references: [id], onDelete: Cascade)
   publications      Publication[]
+  records           HistoryRecord[]
 
   @@unique([userId, providerId, username], name: "integration_unique_identifier")
+}
+
+model HistoryRecord {
+    id      Int     @id @default(autoincrement())
+    createdAt     DateTime    @default(now())
+    updatedAt     DateTime    @updatedAt  
+    integrationId       String
+    integration         Integration     @relation(fields: [integrationId], references: [id], onDelete: Cascade)
+    followersCount      Int     @default(0)
+    reactionsCount      Int     @default(0)
+    postsCount          Int     @default(0)
 }
 
 // represent all available blogging providers

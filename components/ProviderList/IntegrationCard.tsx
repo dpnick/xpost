@@ -120,14 +120,21 @@ export default function IntegrationCard({
         <Stat
           value={infos?.followersCount}
           label='followers'
+          description='Current total number of followers'
           Icon={RiUserFollowLine}
         />
         <Stat
           value={infos?.reactionsCount}
           label='reactions'
+          description='Current total number of reactions on your articles'
           Icon={MdOutlineAddReaction}
         />
-        <Stat value={infos?.postsCount} label='posts' Icon={MdPostAdd} />
+        <Stat
+          value={infos?.postsCount}
+          label='posts'
+          description='Current number of article published'
+          Icon={MdPostAdd}
+        />
       </Box>
       <Box display='flex' alignItems='center' justifyContent='center' pb='16px'>
         <BsCheckCircleFill size={16} color='#24b47e' />

@@ -10,7 +10,7 @@ interface IconButtonProps {
   color: string;
   hoverColor?: string;
   size?: number | string;
-  onClick: () => void;
+  onClick?: () => void;
 }
 
 const Container = styled(Box)`

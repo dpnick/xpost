@@ -54,28 +54,31 @@ export default function ProviderList({
     setShowNewProviders((prev) => !prev);
   };
 
-  const selectProviderToAdd = (provider: Provider) => {
-    window.scrollTo(0, 0);
+  const selectProviderToAdd = (provider: Provider) =>
     setSelectedProvider(provider);
-  };
 
   const onIntegrationSuccess = () => {
     setSelectedProvider(null);
     setShowNewProviders(false);
-    document.body.classList.remove('modal-open');
     refresh();
     mutate();
   };
 
+  const hideIntegrationModal = () => setSelectedProvider(null);
+
   const newIntegrationModal = () => {
     if (selectedProvider) {
       return (
-        <Modal onClose={() => setSelectedProvider(null)}>
-          <NewIntegration
-            provider={selectedProvider}
-            closeModal={onIntegrationSuccess}
-          />
-        </Modal>
+        <Modal
+          open={!!selectedProvider}
+          onChange={hideIntegrationModal}
+          content={
+            <NewIntegration
+              provider={selectedProvider}
+              closeModal={onIntegrationSuccess}
+            />
+          }
+        />
       );
     }
     return null;

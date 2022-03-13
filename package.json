@@ -11,6 +11,8 @@
   "dependencies": {
     "@next-auth/prisma-adapter": "^1.0.1",
     "@prisma/client": "^3.9.2",
+    "@radix-ui/react-dialog": "^0.1.7",
+    "@radix-ui/react-tooltip": "^0.1.7",
     "@sentry/nextjs": "^6.18.2",
     "crypto-js": "^4.1.1",
     "date-fns": "^2.28.0",

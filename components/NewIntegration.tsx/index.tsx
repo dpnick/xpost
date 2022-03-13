@@ -29,12 +29,12 @@ const CollapseContainer = styled(Box)`
 `;
 
 const RegisterButton = styled.input`
-  height: 40px;
+  min-height: 40px;
   border: none;
   background: ${({ theme }) => theme.colors.primary};
   color: white;
-  font-weight: bold;
-  border-radius: 4px;
+  font-size: 1em;
+  border-radius: 8px 16px;
   cursor: pointer;
   &:active {
     opacity: 0.4;

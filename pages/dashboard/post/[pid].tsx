@@ -5,6 +5,7 @@ import Modal from '@components/Modal';
 import PublishModal from '@components/PublishModal';
 import Spinner from '@components/Spinner';
 import Text from '@components/Text';
+import Tooltip from '@components/Tooltip';
 import YoutubeEmbed from '@components/YoutubeEmbed';
 import usePosts from '@hooks/usePosts';
 import useProviders from '@hooks/useProviders';
@@ -35,7 +36,7 @@ const StyledInput = styled.textarea`
   border: none;
   background: ${({ theme }) => theme.colors.gray[100]};
   border-radius: 4px;
-  font-size: 18px;
+  font-size: 1.5rem;
   font-weight: bold;
   resize: none;
   &:focus {
@@ -47,7 +48,6 @@ export default function Edit() {
   const router = useRouter();
   const { pid } = router.query;
   const { colors } = useTheme();
-  const [showPublishModal, setShowPublishModal] = useState<boolean>(false);
   const [toUpdate, setToUpdate] = useState<Partial<Post>>();
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const [cover, setCover] = useState<string>();
@@ -158,10 +158,6 @@ export default function Edit() {
 
   const goBack = () => router.back();
 
-  const hidePublishModal = () => setShowPublishModal(false);
-
-  const onPublish = () => setShowPublishModal(true);
-
   const onDelete = async (toastId: string) => {
     try {
       toast.dismiss(toastId);
@@ -213,40 +209,53 @@ export default function Edit() {
   }
 
   return (
-    <>
-      {showPublishModal && (
-        <Modal onClose={hidePublishModal}>
-          <PublishModal post={selectedPost!} integrations={integrations!} />
-        </Modal>
-      )}
-      <Box padding={['32px 6vw', '32px 12vw']}>
-        <Box
-          width='100%'
-          display='flex'
-          justifyContent='space-between'
-          alignItems='center'
-        >
+    <Box paddingY={4} width={['90%', '70%', '60%']} margin='auto'>
+      <Box
+        width='100%'
+        display='flex'
+        justifyContent='space-between'
+        alignItems='center'
+        mb={3}
+      >
+        <IconButton
+          Icon={IoArrowBackCircleSharp}
+          color='black'
+          onClick={goBack}
+          size='2em'
+        />
+        <Box display='flex' alignItems='center'>
+          {!selectedPost?.published && (
+            <Modal
+              content={
+                <PublishModal
+                  post={selectedPost!}
+                  integrations={integrations!}
+                />
+              }
+            >
+              <Box>
+                <ChipButton color='primary'>
+                  <Text mr={1} color='white'>
+                    Publish
+                  </Text>
+                  <BsArrowUpRight size={16} color='white' />
+                </ChipButton>
+              </Box>
+            </Modal>
+          )}
           <IconButton
-            Icon={IoArrowBackCircleSharp}
+            Icon={MdDelete}
             color='black'
-            onClick={goBack}
-            size='2em'
+            hoverColor={colors.danger}
+            onClick={showConfirm}
           />
-          <Box display='flex' alignItems='center'>
-            {!selectedPost?.published && (
-              <ChipButton callback={onPublish} color='primary'>
-                <Text mr={1} color='white'>
-                  Publish
-                </Text>
-                <BsArrowUpRight size={16} color='white' />
-              </ChipButton>
-            )}
-            <IconButton
-              Icon={MdDelete}
-              color='black'
-              hoverColor={colors.danger}
-              onClick={showConfirm}
-            />
+          <Tooltip
+            content={
+              isSaving
+                ? 'Currently saving your content...'
+                : 'Content already saved ✓'
+            }
+          >
             <Box display='flex' position='relative'>
               {isSaving ? (
                 <Spinner width={20} height={20} icon={false} />
@@ -254,58 +263,59 @@ export default function Edit() {
                 <BsFillCloudCheckFill size={24} />
               )}
             </Box>
-          </Box>
+          </Tooltip>
         </Box>
+      </Box>
 
-        <Box display='flex' alignItems='center' justifyContent='center'>
-          {selectedPost?.published && (
-            <>
-              <IoInformationCircleOutline color='gold' size={24} />
-              <Text>At the moment published article are readonly.</Text>
-            </>
-          )}
-        </Box>
-        <Box
-          width='100%'
-          height='40vh'
-          onClick={triggerClickCover}
-          overflow='hidden'
-          position='relative'
-          className='pointer'
-        >
-          <Image
-            src={cover ?? selectedPost?.cover ?? '/images/add_cover.png'}
-            alt='cover'
-            layout='fill'
-            objectFit='contain'
-            priority
-          />
-        </Box>
-        <input ref={coverRef} hidden type='file' onChange={handleCoverInput} />
-        <StyledInput
-          rows={3}
-          defaultValue={selectedPost?.title ?? undefined}
-          placeholder='Enter a title here'
-          onChange={udpateTitle}
-          disabled={selectedPost?.published}
-        />
-        <Editor
-          autoFocus
-          readOnly={selectedPost?.published}
-          defaultValue={selectedPost?.content ?? undefined}
-          onChange={udpateContent}
-          uploadImage={uploadImg}
-          disableExtensions={['container_notice']}
-          embeds={[
-            {
-              title: 'Youtube',
-              matcher: (href) => href.includes('youtube'),
-              component: YoutubeEmbed,
-            },
-          ]}
+      <Box display='flex' alignItems='center' justifyContent='center'>
+        {selectedPost?.published && (
+          <>
+            <IoInformationCircleOutline color='gold' size={24} />
+            <Text>At the moment published article are readonly.</Text>
+          </>
+        )}
+      </Box>
+      <Box
+        width='100%'
+        height='40vh'
+        onClick={triggerClickCover}
+        overflow='hidden'
+        position='relative'
+        className='pointer'
+      >
+        <Image
+          src={cover ?? selectedPost?.cover ?? '/images/add_cover.png'}
+          alt='cover'
+          layout='fill'
+          objectFit='contain'
+          priority
         />
       </Box>
-    </>
+      <input ref={coverRef} hidden type='file' onChange={handleCoverInput} />
+      <StyledInput
+        rows={3}
+        defaultValue={selectedPost?.title ?? undefined}
+        placeholder='Enter a title here'
+        onChange={udpateTitle}
+        disabled={selectedPost?.published}
+      />
+      <Editor
+        autoFocus
+        readOnly={selectedPost?.published}
+        defaultValue={selectedPost?.content ?? undefined}
+        onChange={udpateContent}
+        uploadImage={uploadImg}
+        placeholder='Type / to use blocks'
+        disableExtensions={['container_notice']}
+        embeds={[
+          {
+            title: 'Youtube',
+            matcher: (href) => href.includes('youtube'),
+            component: YoutubeEmbed,
+          },
+        ]}
+      />
+    </Box>
   );
 }
 

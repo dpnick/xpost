@@ -49,7 +49,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const newIntegration = await prisma.integration.create({
       data: {
         token,
-        username: username ?? userData.username,
+        username: username ?? userData.username!,
         publicationId: userData.publicationId,
         user: {
           connect: {
