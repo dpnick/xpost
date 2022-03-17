@@ -1,8 +1,8 @@
 import Box from '@components/Box';
 import ErrorBoundary from '@components/ErrorBoundary';
+import { GlobalStyles } from '@components/GlobalStyle';
 import Header from '@components/Header';
 import Spinner from '@components/Spinner';
-import '@styles/globals.scss';
 import ThemeProvider from 'contexts/ThemeContext';
 import { NextComponentType, NextPageContext } from 'next';
 import { SessionProvider, useSession } from 'next-auth/react';
@@ -22,6 +22,7 @@ function App({
       <FaviconHead />
       <SessionProvider session={session}>
         <ThemeProvider>
+          <GlobalStyles />
           {Component.auth ? (
             <Auth>
               <>

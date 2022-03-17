@@ -60,9 +60,8 @@ export default function Header() {
       alignItems='center'
       bg='accent'
       paddingX='3vw'
-      borderBottom='2px solid white'
       height='80px'
-      borderBottomWidth='1px solid'
+      borderBottomStyle='solid'
       borderBottomColor='gray.300'
     >
       <Box display='flex' alignItems='center'>
