@@ -1,4 +1,5 @@
 import Box from '@components/Box';
+import IconButton from '@components/IconButton';
 import useProviders from '@hooks/useProviders';
 import fetchJson from '@lib/fetchJson';
 import { IntegrationInfos } from '@models/integration';
@@ -11,7 +12,7 @@ import { AiFillQuestionCircle } from 'react-icons/ai';
 import { BsCheckCircleFill } from 'react-icons/bs';
 import { MdDelete, MdOutlineAddReaction, MdPostAdd } from 'react-icons/md';
 import { RiUserFollowLine } from 'react-icons/ri';
-import styled from 'styled-components';
+import { useTheme } from 'styled-components';
 import Text from '../Text';
 import Stat from './Stat';
 
@@ -21,20 +22,13 @@ interface IntegrationCardProps {
   infos: IntegrationInfos;
 }
 
-const StyledTrash = styled(MdDelete)`
-  cursor: pointer;
-  transition: color 0.2s ease-in-out;
-  &:hover {
-    color: ${({ theme }) => theme.colors.danger};
-  }
-`;
-
 export default function IntegrationCard({
   integration,
   provider,
   infos,
 }: IntegrationCardProps) {
   const { refresh } = useProviders();
+  const { colors } = useTheme();
 
   const deleteIntegration = async (toastId: string) => {
     try {
@@ -75,7 +69,7 @@ export default function IntegrationCard({
   return (
     <Box
       minWidth={['60vw', 0]}
-      marginRight={['16px', 0]}
+      marginRight={['16px', '16px', 0]}
       className={styles.card}
       padding='0'
     >
@@ -103,7 +97,12 @@ export default function IntegrationCard({
           </Text>
         </Box>
         <Box display='flex' alignItems='center'>
-          <StyledTrash size={24} onClick={showConfirm} />
+          <IconButton
+            Icon={MdDelete}
+            color='black'
+            hoverColor={colors.danger}
+            onClick={showConfirm}
+          />
         </Box>
       </Box>
       <Box mt='16px' className={styles.flexCenter}>

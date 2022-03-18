@@ -1,9 +1,9 @@
 import Box from '@components/Box';
 import Collapse from '@components/Collapse';
-import Modal from '@components/Modal';
-import PublishModal from '@components/PublishModal';
+import Text from '@components/Text';
 import { Integration, Post, Provider, Publication } from '@prisma/client';
 import React, { useState } from 'react';
+import { RiGhostLine } from 'react-icons/ri';
 import DraftCard from './DraftCard';
 import ListHeader from './ListHeader';
 import PublishedCard from './PublishedCard';
@@ -14,6 +14,7 @@ interface PostListProps {
   posts: Post[] | (Post & { publications: Publication[] })[];
   integrations: (Integration & { provider: Provider })[];
   isDraft?: boolean;
+  selectPostToPublish?: (post: Post) => void;
 }
 
 export default function PostList({
@@ -22,26 +23,22 @@ export default function PostList({
   posts,
   integrations,
   isDraft,
+  selectPostToPublish,
 }: PostListProps) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [selectedPost, setSelectedPost] = useState<Post | null>(null);
 
   const toggleOpening = () => {
     setIsOpen((prev) => !prev);
   };
 
-  const selectPost = (post: Post) => setSelectedPost(post);
-  const hidePublishModal = () => setSelectedPost(null);
-
   const renderDraft = (
     <>
-      {selectedPost && (
-        <Modal onClose={hidePublishModal}>
-          <PublishModal post={selectedPost} integrations={integrations} />
-        </Modal>
-      )}
       {posts?.map((post) => (
-        <DraftCard key={post.id} draft={post} selectPost={selectPost} />
+        <DraftCard
+          key={post.id}
+          draft={post}
+          selectPost={selectPostToPublish!}
+        />
       ))}
     </>
   );
@@ -75,7 +72,21 @@ export default function PostList({
               renderPublished
             )
           ) : (
-            <p>Nothing to display yet</p>
+            <Box
+              display='flex'
+              alignItems='center'
+              justifyContent='center'
+              flexDirection='column'
+              py={3}
+            >
+              <RiGhostLine size={48} color='black' />
+              <Text mt={3} color='gray.500' textAlign='center'>
+                Nothing to display yet,{' '}
+                {isDraft
+                  ? 'add a new draft to see it appears here!'
+                  : 'as soon as you publish an article, you can find it here!'}
+              </Text>
+            </Box>
           )}
         </Box>
       </Collapse>

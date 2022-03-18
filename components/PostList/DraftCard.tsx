@@ -12,23 +12,13 @@ import React from 'react';
 import toast from 'react-hot-toast';
 import { AiFillQuestionCircle } from 'react-icons/ai';
 import { BsArrowUpRight } from 'react-icons/bs';
-import styled from 'styled-components';
 import ChipButton from '../ChipButton';
+import PostCardContainer from './PostCardContainer';
 
 interface DraftCardProps {
   draft: Post;
   selectPost: (post: Post) => void;
 }
-
-const PostCard = styled(Box)`
-  margin: 8px 0;
-  padding: 16px;
-  display: flex;
-  &:hover {
-    color: ${({ theme }) => theme.colors.primary};
-    border: 1px solid ${({ theme }) => theme.colors.primary};
-  }
-`;
 
 export default function DraftCard({ draft, selectPost }: DraftCardProps) {
   const { id, cover, title, content, updatedAt } = draft;
@@ -86,8 +76,18 @@ export default function DraftCard({ draft, selectPost }: DraftCardProps) {
   };
 
   return (
-    <PostCard onClick={goDraft} className={styles.clickableCard}>
-      <Box position='relative' width='30vw' height='15vw' flexShrink={0}>
+    <PostCardContainer
+      flexDirection={['column', 'row']}
+      alignItems={['center', 'unset']}
+      onClick={goDraft}
+      className={styles.clickableCard}
+    >
+      <Box
+        position='relative'
+        width={['100%', '30vw']}
+        height={['150px', '15vw']}
+        flexShrink={0}
+      >
         <Image
           src={cover ?? EMPTY_IMG}
           alt='cover'
@@ -95,35 +95,37 @@ export default function DraftCard({ draft, selectPost }: DraftCardProps) {
           objectFit='contain'
         />
       </Box>
-      <Box display='flex' flexDirection='column' ml='8px'>
+      <Box
+        display='flex'
+        flexDirection='column'
+        mt={['16px', 0]}
+        ml={[0, '8px']}
+      >
         <Text
           color='primary'
           fontSize='1.2em'
           fontWeight='bold'
           overflow='hidden'
           maxHeight='3.6em'
+          textAlign={['center', 'unset']}
         >
           {title}
         </Text>
-        <Text color='gray.500' marginY='8px'>
+        <Text color='gray.500' marginY='8px' textAlign={['center', 'unset']}>
           {`Last edited ${formatDistanceToNow(parseISO(updatedAt.toString()), {
             addSuffix: true,
           })}`}
         </Text>
-        <Box display='flex'>
-          <ChipButton
-            label='Publish'
-            callback={onPublish}
-            Icon={BsArrowUpRight}
-            color='white'
-            background='primary'
-          />
-          <ChipButton
-            label='Delete'
-            callback={showConfirm}
-            color='red'
-            background='unset'
-          />
+        <Box display='flex' justifyContent={['center', 'unset']}>
+          <ChipButton callback={onPublish} color='primary'>
+            <Text mr={1} color='white'>
+              Publish
+            </Text>
+            <BsArrowUpRight size={16} color='white' />
+          </ChipButton>
+          <ChipButton callback={showConfirm} color='danger' outline>
+            <Text color='danger'>Delete</Text>
+          </ChipButton>
         </Box>
         <Text
           overflow='hidden'
@@ -135,6 +137,6 @@ export default function DraftCard({ draft, selectPost }: DraftCardProps) {
           {content}
         </Text>
       </Box>
-    </PostCard>
+    </PostCardContainer>
   );
 }

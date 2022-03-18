@@ -119,12 +119,13 @@ export default function NewIntegration({
           />
         </Box>
         <Collapse isOpen={isOpen}>
-          <Box width='100%' height='50vh' position='relative'>
+          <Box width='100%' py={3} position='relative'>
             <Image
               alt='instructions'
               src={intructionsUrl!.toString()}
-              layout='fill'
-              objectFit='contain'
+              width={1100}
+              height={630}
+              layout='responsive'
               priority
             />
           </Box>

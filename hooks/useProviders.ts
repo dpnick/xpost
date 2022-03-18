@@ -1,13 +1,13 @@
 import fetchSwr from '@lib/fetchSwr';
 import { Integration, Provider } from '@prisma/client';
-import useSWR, { Fetcher } from 'swr';
+import useSWRImmutable, { Fetcher } from 'swr';
 
 export default function useProviders() {
   const providerFetch: Fetcher<{
     providers: Provider[];
     integrations: (Integration & { provider: Provider })[];
   }> = fetchSwr;
-  const { data, error, mutate } = useSWR(
+  const { data, error, mutate } = useSWRImmutable(
     '/api/provider/get-providers',
     providerFetch
   );

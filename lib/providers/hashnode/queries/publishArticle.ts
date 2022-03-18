@@ -6,6 +6,9 @@ const PUBLISH_ARTICLE = `
             publication {
                 domain
             }
+            author {
+                blogHandle
+            }
         }
     }
   }

@@ -15,9 +15,9 @@ export default function Footer() {
     <Box
       className={styles.flexCenter}
       width='100%'
+      height='180px'
       flexDirection='column'
       bg='accent'
-      py='24px'
     >
       <Box className={styles.flexCenter} pb='16px'>
         <Image src='/icon.svg' alt='xpost logo' width={35} height={35} />

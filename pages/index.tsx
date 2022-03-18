@@ -94,26 +94,30 @@ const Home = ({ providers }: HomeProps) => {
         </Box>
 
         <div className={styles.grid}>
-          <div className={styles.card}>
+          <Text
+            textAlign={['center', 'center', 'left']}
+            className={styles.card}
+          >
             <MdLooksOne size='3rem' className='primary' />
             <Text fontSize='1.5rem' fontWeight='bold'>
               Connect your favorite blogging platforms and get your personal
               dashboard
             </Text>
-          </div>
+          </Text>
 
           <Box
             className={styles.imgCard}
-            width={['80vw', '40vw']}
-            height={['60vw', '30vw']}
+            width={['80vw', '70vw', '40vw']}
+            height='100%'
             p={0}
             overflow='hidden'
           >
             <Image
               src='/demo_providers.png'
               alt='dashboard'
-              layout='fill'
-              objectFit='cover'
+              width={1240}
+              height={860}
+              layout='responsive'
               priority={true}
             />
           </Box>
@@ -121,52 +125,60 @@ const Home = ({ providers }: HomeProps) => {
 
         <Box
           className={styles.grid}
-          flexDirection={['column-reverse', 'unset']}
+          flexDirection={['column-reverse', 'column-reverse', 'unset']}
         >
           <Box
             className={styles.imgCard}
-            width={['80vw', '40vw']}
-            height={['60vw', '30vw']}
+            width={['80vw', '70vw', '40vw']}
+            height='100%'
             p={0}
             overflow='hidden'
           >
             <Image
               src='/demo_editor.png'
               alt='dashboard'
-              layout='fill'
-              objectFit='cover'
+              width={1240}
+              height={860}
+              layout='responsive'
               priority={true}
             />
           </Box>
-          <div className={styles.card}>
+          <Text
+            textAlign={['center', 'center', 'left']}
+            className={styles.card}
+          >
             <MdLooksTwo size='3rem' className='primary' />
             <Text fontSize='1.5rem' fontWeight='bold'>
               Enjoy a consistent writting experience with instant rendering
             </Text>
-          </div>
+          </Text>
         </Box>
 
         <div className={styles.grid}>
-          <div className={styles.card}>
+          <Text
+            textAlign={['center', 'center', 'left']}
+            className={styles.card}
+          >
             <MdLooks3 size='3rem' className='primary' />
             <Text fontSize='1.5rem' fontWeight='bold'>
               Choose to post your article to a single, or multiple platforms at
               a time, we take care of everything
             </Text>
-          </div>
+          </Text>
 
           <Box
             className={styles.imgCard}
-            width={['80vw', '40vw']}
-            height={['60vw', '30vw']}
+            width={['80vw', '70vw', '40vw']}
+            height='100%'
             p={0}
             overflow='hidden'
           >
             <Image
               src='/demo_publish.png'
               alt='dashboard'
-              layout='fill'
-              objectFit='cover'
+              width={1240}
+              height={860}
+              layout='responsive'
               priority={true}
             />
           </Box>
