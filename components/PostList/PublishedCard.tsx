@@ -4,7 +4,7 @@ import { Integration, Post, Provider, Publication } from '@prisma/client';
 import styles from '@styles/Dashboard.module.scss';
 import { formatDistanceToNow, parseISO } from 'date-fns';
 import Image from 'next/image';
-import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { EMPTY_IMG } from 'pages/dashboard';
 import React from 'react';
 import ChipButton from '../ChipButton';
@@ -19,6 +19,7 @@ export default function PublishedCard({
   integrations,
 }: PublishedCardProps) {
   const { id, cover, title, firstPublishedAt, publications, tags } = post;
+  const router = useRouter();
 
   const arrTags = tags?.split(',');
 
@@ -30,75 +31,80 @@ export default function PublishedCard({
     window.open(url, '_blank');
   };
 
+  const goPublished = () => {
+    router.push({
+      pathname: '/dashboard/post/[pid]',
+      query: { pid: id },
+    });
+  };
+
   return (
-    <Link
-      href={{
-        pathname: `dashboard/post/[id]`,
-        query: { id },
-      }}
-      passHref
+    <Box
+      onClick={goPublished}
+      display='flex'
+      p='16px'
+      my='8px'
+      className={styles.clickableCard}
     >
-      <Box display='flex' p='16px' my='8px' className={styles.clickableCard}>
-        <Box position='relative' width='30vw' height='15vw' flexShrink={0}>
-          <Image
-            src={cover ?? EMPTY_IMG}
-            alt='cover'
-            layout='fill'
-            objectFit='contain'
-          />
-        </Box>
-        <Box display='flex' flexDirection='column' ml='8px'>
-          <Text
-            color='primary'
-            fontSize='1.2em'
-            fontWeight='bold'
-            overflow='hidden'
-            maxHeight='3.6em'
-          >
-            {title}
-          </Text>
-          {firstPublishedAt && (
-            <Text color='gray' marginY='8px'>
-              {`First published ${formatDistanceToNow(
-                parseISO(firstPublishedAt.toString()),
-                {
-                  addSuffix: true,
-                }
-              )}`}
-            </Text>
-          )}
-          <Box display='flex' flexWrap='wrap' mt='8px'>
-            {publications?.map((publication) => {
-              const integration = integrations?.find(
-                ({ id }) => id === publication.integrationId
-              );
-
-              if (integration) {
-                return (
-                  <ChipButton
-                    key={publication.id}
-                    label={`${integration.provider.displayName} - ${integration.username}`}
-                    callback={(event) => openUrl(event, publication.url)}
-                    color='white'
-                    background={integration.provider.color}
-                  />
-                );
-              }
-
-              return null;
-            })}
-          </Box>
-          {arrTags && (
-            <Box display='flex' flexWrap='wrap' mt='8px'>
-              {arrTags.map((tag) => (
-                <Text key={tag} mr='4px'>
-                  #{tag}
-                </Text>
-              ))}
-            </Box>
-          )}
-        </Box>
+      <Box position='relative' width='30vw' height='15vw' flexShrink={0}>
+        <Image
+          src={cover ?? EMPTY_IMG}
+          alt='cover'
+          layout='fill'
+          objectFit='contain'
+        />
       </Box>
-    </Link>
+      <Box display='flex' flexDirection='column' ml='8px'>
+        <Text
+          color='primary'
+          fontSize='1.2em'
+          fontWeight='bold'
+          overflow='hidden'
+          maxHeight='3.6em'
+        >
+          {title}
+        </Text>
+        {firstPublishedAt && (
+          <Text color='gray.500' marginY='8px'>
+            {`First published ${formatDistanceToNow(
+              parseISO(firstPublishedAt.toString()),
+              {
+                addSuffix: true,
+              }
+            )}`}
+          </Text>
+        )}
+        <Box display='flex' flexWrap='wrap' mt='8px'>
+          {publications?.map((publication) => {
+            const integration = integrations?.find(
+              ({ id }) => id === publication.integrationId
+            );
+
+            if (integration) {
+              return (
+                <ChipButton
+                  key={publication.id}
+                  label={`${integration.provider.displayName} - ${integration.username}`}
+                  callback={(event) => openUrl(event, publication.url)}
+                  color='white'
+                  background={integration.provider.color}
+                />
+              );
+            }
+
+            return null;
+          })}
+        </Box>
+        {arrTags && (
+          <Box display='flex' flexWrap='wrap' mt='8px'>
+            {arrTags.map((tag) => (
+              <Text key={tag} mr='4px'>
+                #{tag}
+              </Text>
+            ))}
+          </Box>
+        )}
+      </Box>
+    </Box>
   );
 }

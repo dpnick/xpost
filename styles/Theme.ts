@@ -7,6 +7,9 @@ const lightTheme: DefaultTheme = {
   colors: {
     primary: '#24b47e',
     secondary: '#F4845F',
+    danger: '#e57373',
+    success: '#81c784',
+    warning: '#ffb74d',
     background: '#FEFEFF',
     text: 'black',
     accent: '#F5F7FA',
@@ -32,6 +35,9 @@ const darkTheme: DefaultTheme = {
   colors: {
     primary: '#24b47e',
     secondary: '#334756',
+    danger: '#d32f2f',
+    success: '#388e3c',
+    warning: '#f57c00',
     background: '#272838',
     text: 'white',
     accent: '#F5F7FA',

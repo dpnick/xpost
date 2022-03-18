@@ -54,9 +54,9 @@ export default function Header() {
             py='16px'
           >
             <Box>
-              <Text color='gray'>Username</Text>
+              <Text color='gray.500'>Username</Text>
               <StyledInput disabled value={session?.user?.name ?? '-'} />
-              <Text color='gray'>Email</Text>
+              <Text color='gray.500'>Email</Text>
               <StyledInput disabled value={session?.user?.email ?? '-'} />
             </Box>
             <ErrorButton label='Sign out' onClick={() => signOut()} />
@@ -72,7 +72,7 @@ export default function Header() {
         borderBottom='2px solid white'
         height='80px'
         borderBottomWidth='1px solid'
-        borderBottomColor='lightgray'
+        borderBottomColor='gray.300'
       >
         <Box display='flex' alignItems='center'>
           <Box className={styles.pointer} onClick={goHome} mr='16px'>

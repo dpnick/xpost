@@ -5,6 +5,7 @@ import ProviderCard from '@components/ProviderList/ProviderCard';
 import Text from '@components/Text';
 import fetchJson from '@lib/fetchJson';
 import { Provider, ProviderName } from '@prisma/client';
+import { useSession } from 'next-auth/react';
 import Head from 'next/head';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
@@ -18,6 +19,7 @@ interface HomeProps {
 
 const Home = ({ providers }: HomeProps) => {
   const router = useRouter();
+  const { data: session } = useSession();
 
   const goDashboard = () => router.push('/dashboard');
 
@@ -38,7 +40,7 @@ const Home = ({ providers }: HomeProps) => {
         borderBottom='2px solid white'
         height='80px'
         borderBottomWidth='1px solid'
-        borderBottomColor='lightgray'
+        borderBottomColor='gray.300'
       >
         <Box display='flex' alignItems='center'>
           <Image src='/icon.svg' alt='xpost logo' width={35} height={35} />
@@ -47,10 +49,13 @@ const Home = ({ providers }: HomeProps) => {
           </Text>
         </Box>
         <Box display='flex' alignItems='center'>
-          <Text color='gray' mr='16px'>
+          <Text color='gray.500' mr='16px'>
             beta
           </Text>
-          <Button label='Get started' onClick={goDashboard} />
+          <Button
+            label={session?.user ? 'Dashboard' : 'Get started'}
+            onClick={goDashboard}
+          />
         </Box>
       </Box>
 
@@ -64,7 +69,7 @@ const Home = ({ providers }: HomeProps) => {
 
         <Text
           textAlign='center'
-          color='gray'
+          color='gray.500'
           margin='3rem 0'
           lineHeight={1.5}
           fontSize='1.5rem'
