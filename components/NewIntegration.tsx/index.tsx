@@ -2,6 +2,7 @@ import Box from '@components/Box';
 import Collapse from '@components/Collapse';
 import ListHeader from '@components/PostList/ListHeader';
 import Text from '@components/Text';
+import { encrypt } from '@lib/encrypt';
 import fetchJson from '@lib/fetchJson';
 import { Provider } from '@prisma/client';
 import styles from '@styles/Dashboard.module.scss';
@@ -72,7 +73,11 @@ export default function NewIntegration({
 
     setSubmitted(true);
     const username = (event.target as HTMLFormElement).username?.value;
-    const token = (event.target as HTMLFormElement).token.value;
+    const clearToken = (event.target as HTMLFormElement).token.value;
+    const encryptedToken = encrypt(
+      clearToken,
+      process.env.NEXT_PUBLIC_INTEGRATION_SECRET!
+    );
     try {
       await fetchJson(
         '/api/integration/create',
@@ -80,7 +85,7 @@ export default function NewIntegration({
           method: 'POST',
           body: JSON.stringify({
             username,
-            token,
+            token: encryptedToken,
             providerId: id,
             providerName: name,
           }),
@@ -133,6 +138,7 @@ export default function NewIntegration({
               src={intructionsUrl!.toString()}
               layout='fill'
               objectFit='contain'
+              priority
             />
           </Box>
         </Collapse>

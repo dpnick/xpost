@@ -13,7 +13,7 @@ import { Post } from '@prisma/client';
 import styles from '@styles/Dashboard.module.scss';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import { AiFillQuestionCircle } from 'react-icons/ai';
 import { BsArrowUpRight, BsFillCloudCheckFill } from 'react-icons/bs';
@@ -51,8 +51,26 @@ export default function Edit() {
 
   const coverRef = useRef<HTMLInputElement>(null);
 
-  const { selectedPost } = usePosts(pid as string);
+  const { selectedPost, refresh } = usePosts(pid as string);
   const { integrations } = useProviders();
+
+  const updatePostCache = useCallback(
+    (toUpdate: Partial<Post>) => {
+      // local update without revalidate
+      refresh((prev) => {
+        const selected = prev?.find((post) => post.id === pid);
+        let next: Post[] | undefined = undefined;
+        if (prev && selected) {
+          next = [
+            ...prev.filter((post) => post.id !== pid),
+            { ...selected, ...toUpdate },
+          ];
+        }
+        return next;
+      }, false);
+    },
+    [refresh, pid]
+  );
 
   useEffect(() => {
     let handler: NodeJS.Timeout;
@@ -66,6 +84,7 @@ export default function Edit() {
             headers: { 'Content-type': 'application/json' },
           });
           setIsSaving(false);
+          updatePostCache(toUpdate);
         } catch {
           toast.error('Something went wrong updating your draft');
         }
@@ -74,7 +93,7 @@ export default function Edit() {
     return () => {
       clearTimeout(handler);
     };
-  }, [toUpdate, pid]);
+  }, [toUpdate, pid, updatePostCache]);
 
   const uploadImg = async (file: File) => {
     const formData = new FormData();

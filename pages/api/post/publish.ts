@@ -1,3 +1,4 @@
+import { decrypt } from '@lib/encrypt';
 import prisma from '@lib/prisma';
 import providers from '@lib/providers';
 import { Integration, Post, Provider, Publication } from '@prisma/client';
@@ -32,6 +33,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     let url = '';
     if (integrationOriginal) {
       let publicationsToCreate: Omit<Publication, 'id'>[] = [];
+      integrationOriginal.token = decrypt(
+        integrationOriginal.token,
+        process.env.NEXT_PUBLIC_INTEGRATION_SECRET!
+      );
 
       // start by publishing original one
       const original = await providers[
@@ -47,13 +52,17 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       );
 
       if (otherIntegrations?.length > 0) {
-        const promises = otherIntegrations?.map((integration) =>
-          providers[integration.provider.name].publishNewArticle(
+        const promises = otherIntegrations?.map((integration) => {
+          integration.token = decrypt(
+            integration.token,
+            process.env.NEXT_PUBLIC_INTEGRATION_SECRET!
+          );
+          return providers[integration.provider.name].publishNewArticle(
             post,
             integration,
             original.url
-          )
-        );
+          );
+        });
 
         const result = await Promise.all(promises);
         publicationsToCreate = [...publicationsToCreate, ...result];

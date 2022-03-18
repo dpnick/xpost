@@ -1,3 +1,4 @@
+import { decrypt } from '@lib/encrypt';
 import prisma from '@lib/prisma';
 import providers from '@lib/providers';
 import { NextApiRequest, NextApiResponse } from 'next';
@@ -25,9 +26,13 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         provider: true,
       },
     });
-    const promises = integrations.map((integration) =>
-      providers[integration.provider!.name].getUserInfos(integration)
-    );
+    const promises = integrations.map((integration) => {
+      integration.token = decrypt(
+        integration.token,
+        process.env.NEXT_PUBLIC_INTEGRATION_SECRET!
+      );
+      return providers[integration.provider!.name].getUserInfos(integration);
+    });
     const result = await Promise.all(promises);
     return res.status(200).json(result);
   } catch (error) {

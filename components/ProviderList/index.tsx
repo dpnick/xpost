@@ -45,7 +45,10 @@ export default function ProviderList({
   const [showNewProviders, setShowNewProviders] = useState<boolean>(false);
 
   const infosFetch: Fetcher<IntegrationInfos[]> = fetchSwr;
-  const { data: infos } = useSWR('/api/integration/get-infos', infosFetch);
+  const { data: infos, mutate } = useSWR(
+    '/api/integration/get-infos',
+    infosFetch
+  );
 
   const toggleNewProviders = () => {
     setShowNewProviders((prev) => !prev);
@@ -61,6 +64,7 @@ export default function ProviderList({
     setShowNewProviders(false);
     document.body.classList.remove('modal-open');
     refresh();
+    mutate();
   };
 
   const newIntegrationModal = () => {
