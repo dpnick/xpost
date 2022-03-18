@@ -1,5 +1,6 @@
 import fetchJson from '@lib/fetchJson';
 import { IntegrationInfos } from '@models/integration';
+import { SelectOption } from '@models/selectOption';
 import { Integration, Post, Provider, Publication } from '@prisma/client';
 
 const DEVT0_URL = 'https://dev.to/api';
@@ -88,16 +89,18 @@ function getUserInfos({ id, token }: Integration): Promise<IntegrationInfos> {
 
 function publishNewArticle(
   post: Post,
+  tags: SelectOption[],
   integration: Integration & { provider: Provider },
   originalUrl?: string
 ): Promise<Omit<Publication, 'id'>> {
+  const devTags = tags?.map((tag) => tag.label);
   const input: ArticleToCreate = {
     article: {
       title: post.title!,
       main_image: post.cover!,
       published: true,
       body_markdown: post.content!,
-      tags: ['developer', 'programming'],
+      tags: devTags ?? [],
     },
   };
 

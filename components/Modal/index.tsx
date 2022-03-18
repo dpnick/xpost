@@ -43,18 +43,13 @@ export default function Modal({ onClose, children }: ModalProps) {
   const modalContent = (
     <ModalOverlay>
       <ContentContainer ref={modalWrapperRef}>
-        <Box
-          bg='white'
-          height='100%'
-          width='100%'
-          borderRadius='8px'
-          p='16px'
-          overflowY='auto'
-        >
-          <Box display='flex' justifyContent='flex-end'>
+        <Box bg='white' height='100%' width='100%' borderRadius='8px' py='16px'>
+          <Box display='flex' justifyContent='flex-end' px='16px'>
             <IoMdClose onClick={handleCloseClick} className={styles.pointer} />
           </Box>
-          <Box height='100%'>{children}</Box>
+          <Box height='100%' overflowY='auto' px='16px'>
+            {children}
+          </Box>
         </Box>
       </ContentContainer>
     </ModalOverlay>

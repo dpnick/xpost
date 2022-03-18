@@ -8,7 +8,7 @@ import { IntegrationInfos } from '@models/integration';
 import { Integration, Provider } from '@prisma/client';
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import useSWR, { Fetcher } from 'swr';
+import useSWRImmutable, { Fetcher } from 'swr';
 import Box from '../Box';
 import Text from '../Text';
 import IntegrationCard from './IntegrationCard';
@@ -45,7 +45,7 @@ export default function ProviderList({
   const [showNewProviders, setShowNewProviders] = useState<boolean>(false);
 
   const infosFetch: Fetcher<IntegrationInfos[]> = fetchSwr;
-  const { data: infos, mutate } = useSWR(
+  const { data: infos, mutate } = useSWRImmutable(
     '/api/integration/get-infos',
     infosFetch
   );

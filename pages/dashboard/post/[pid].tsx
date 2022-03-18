@@ -7,13 +7,14 @@ import Text from '@components/Text';
 import YoutubeEmbed from '@components/YoutubeEmbed';
 import usePosts from '@hooks/usePosts';
 import useProviders from '@hooks/useProviders';
+import useThrottle from '@hooks/useThrottle';
 import fetchJson from '@lib/fetchJson';
 import { CloudinaryImg } from '@models/cloudinaryImg';
 import { Post } from '@prisma/client';
 import styles from '@styles/Dashboard.module.scss';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import { AiFillQuestionCircle } from 'react-icons/ai';
 import { BsArrowUpRight, BsFillCloudCheckFill } from 'react-icons/bs';
@@ -72,28 +73,24 @@ export default function Edit() {
     [refresh, pid]
   );
 
-  useEffect(() => {
-    let handler: NodeJS.Timeout;
+  const fetchUpdates = useCallback(async () => {
     if (pid && toUpdate) {
-      handler = setTimeout(async () => {
-        try {
-          setIsSaving(true);
-          await fetchJson('/api/post/update', {
-            method: 'POST',
-            body: JSON.stringify({ update: toUpdate, pid }),
-            headers: { 'Content-type': 'application/json' },
-          });
-          setIsSaving(false);
-          updatePostCache(toUpdate);
-        } catch {
-          toast.error('Something went wrong updating your draft');
-        }
-      }, 1000);
+      try {
+        setIsSaving(true);
+        await fetchJson('/api/post/update', {
+          method: 'POST',
+          body: JSON.stringify({ update: toUpdate, pid }),
+          headers: { 'Content-type': 'application/json' },
+        });
+        setIsSaving(false);
+        updatePostCache(toUpdate);
+      } catch {
+        toast.error('Something went wrong updating your draft');
+      }
     }
-    return () => {
-      clearTimeout(handler);
-    };
   }, [toUpdate, pid, updatePostCache]);
+
+  useThrottle(fetchUpdates, 1500, [toUpdate, pid, updatePostCache]);
 
   const uploadImg = async (file: File) => {
     const formData = new FormData();

@@ -6,14 +6,15 @@ import {
   Publication,
 } from '@prisma/client';
 import { IntegrationInfos } from './integration';
+import { SelectOption } from './selectOption';
 
-export interface ProviderLib {
-  [ProviderName.HASHNODE]: ProviderHelper;
-  [ProviderName.DEV]: ProviderHelper;
-  [ProviderName.MEDIUM]: ProviderHelper;
+export interface ProviderFactory {
+  [ProviderName.HASHNODE]: ProviderFunctions;
+  [ProviderName.DEV]: ProviderFunctions;
+  [ProviderName.MEDIUM]: ProviderFunctions;
 }
 
-export interface ProviderHelper {
+export interface ProviderFunctions {
   init: (params: {
     token: string;
     username?: string;
@@ -21,6 +22,7 @@ export interface ProviderHelper {
   getUserInfos: (params: Integration) => Promise<IntegrationInfos>;
   publishNewArticle: (
     post: Post,
+    tags: SelectOption[],
     integration: Integration & { provider: Provider },
     originalUrl?: string
   ) => Promise<Omit<Publication, 'id'>>;

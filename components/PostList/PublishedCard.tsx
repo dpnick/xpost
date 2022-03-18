@@ -18,7 +18,9 @@ export default function PublishedCard({
   post,
   integrations,
 }: PublishedCardProps) {
-  const { id, cover, title, firstPublishedAt, publications } = post;
+  const { id, cover, title, firstPublishedAt, publications, tags } = post;
+
+  const arrTags = tags?.split(',');
 
   const openUrl = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>,
@@ -55,14 +57,16 @@ export default function PublishedCard({
           >
             {title}
           </Text>
-          <Text color='gray' marginY='8px'>
-            {`First published ${formatDistanceToNow(
-              parseISO(firstPublishedAt!.toString()),
-              {
-                addSuffix: true,
-              }
-            )}`}
-          </Text>
+          {firstPublishedAt && (
+            <Text color='gray' marginY='8px'>
+              {`First published ${formatDistanceToNow(
+                parseISO(firstPublishedAt.toString()),
+                {
+                  addSuffix: true,
+                }
+              )}`}
+            </Text>
+          )}
           <Box display='flex' flexWrap='wrap' mt='8px'>
             {publications?.map((publication) => {
               const integration = integrations?.find(
@@ -84,6 +88,15 @@ export default function PublishedCard({
               return null;
             })}
           </Box>
+          {arrTags && (
+            <Box display='flex' flexWrap='wrap' mt='8px'>
+              {arrTags.map((tag) => (
+                <Text key={tag} mr='4px'>
+                  #{tag}
+                </Text>
+              ))}
+            </Box>
+          )}
         </Box>
       </Box>
     </Link>
