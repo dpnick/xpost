@@ -1,10 +1,10 @@
 import Box from '@components/Box';
 import Button from '@components/Button';
-import Footer from '@components/Footer';
 import Modal from '@components/Modal';
 import PostList from '@components/PostList';
 import ProviderList from '@components/ProviderList';
 import PublishModal from '@components/PublishModal';
+import SideBarWrapper from '@components/SideBarWrapper';
 import Spinner from '@components/Spinner';
 import usePosts from '@hooks/usePosts';
 import useProviders from '@hooks/useProviders';
@@ -24,8 +24,8 @@ const AddButton = styled(Button)`
   margin-right: 16px;
 `;
 
-const HEADER_HEIGHT = 80;
-const FOOTER_HEIGHT = 180;
+export const HEADER_HEIGHT = 80;
+export const FOOTER_HEIGHT = 180;
 
 export default function Dashboard() {
   const [postToPublish, setPostToPublish] = useState<Post | null>(null);
@@ -89,63 +89,46 @@ export default function Dashboard() {
           }
         />
       )}
-      <Box width='100%' bg='white'>
-        <Box display='flex'>
-          <Box
-            display={['none', 'none', 'none', 'unset']}
-            width={'15vw'}
-            flexShrink={0}
-            bg='accent'
-            borderRightColor='gray.300'
-            borderRightStyle='solid'
-          >
-            test
+      <SideBarWrapper>
+        <Box
+          width={['100vw', '100vw', '100vw', '85vw']}
+          minHeight={`calc(100vh - ${HEADER_HEIGHT}px - ${FOOTER_HEIGHT}px)`}
+          px='3vw'
+          pb='10vh'
+          pt='8px'
+        >
+          <h3>Providers</h3>
+          <ProviderList providers={providers!} integrations={integrations!} />
+          <h3>Posts</h3>
+          <Box p={0} mt='32px' className={styles.card}>
+            <PostList
+              isDraft
+              selectPostToPublish={selectPostToPublish}
+              posts={posts ? posts?.filter(({ published }) => !published) : []}
+              integrations={integrations!}
+              title={`Drafts (${
+                posts?.filter(({ published }) => !published)?.length
+              })`}
+              headerAction={
+                <AddButton
+                  label='New'
+                  Icon={IoAddSharp}
+                  onClick={createNewDraft}
+                />
+              }
+            />
           </Box>
-          <Box
-            width={['100vw', '100vw', '100vw', '85vw']}
-            minHeight={`calc(100vh - ${HEADER_HEIGHT}px - ${FOOTER_HEIGHT}px)`}
-            px='3vw'
-            pb='10vh'
-            pt='8px'
-          >
-            <h3>Providers</h3>
-            <ProviderList providers={providers!} integrations={integrations!} />
-            <h3>Posts</h3>
-            <Box p={0} mt='32px' className={styles.card}>
-              <PostList
-                isDraft
-                selectPostToPublish={selectPostToPublish}
-                posts={
-                  posts ? posts?.filter(({ published }) => !published) : []
-                }
-                integrations={integrations!}
-                title={`Drafts (${
-                  posts?.filter(({ published }) => !published)?.length
-                })`}
-                headerAction={
-                  <AddButton
-                    label='New'
-                    Icon={IoAddSharp}
-                    onClick={createNewDraft}
-                  />
-                }
-              />
-            </Box>
-            <Box p={0} mt='16px' className={styles.card}>
-              <PostList
-                posts={
-                  posts ? posts?.filter(({ published }) => !!published) : []
-                }
-                integrations={integrations!}
-                title={`Latest published (${
-                  posts?.filter(({ published }) => !!published)?.length
-                })`}
-              />
-            </Box>
+          <Box p={0} mt='16px' className={styles.card}>
+            <PostList
+              posts={posts ? posts?.filter(({ published }) => !!published) : []}
+              integrations={integrations!}
+              title={`Latest published (${
+                posts?.filter(({ published }) => !!published)?.length
+              })`}
+            />
           </Box>
         </Box>
-        <Footer />
-      </Box>
+      </SideBarWrapper>
     </>
   );
 }
