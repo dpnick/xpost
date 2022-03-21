@@ -109,6 +109,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     return res.status(200).json({ publications });
   } catch (error) {
+    console.log(error);
     let message = String(error);
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
       message = handlePrismaError(error);

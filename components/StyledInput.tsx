@@ -18,9 +18,6 @@ const StyledInput = styled.input<StyledInputProps>`
   &:focus {
     outline: solid 2px ${({ theme }) => theme.colors.primary};
   }
-  &::placeholder {
-    color: ${({ theme }) => theme.colors.gray[400]};
-  }
 `;
 
 export default StyledInput;

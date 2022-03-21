@@ -99,8 +99,6 @@ export default function DraftCard({ draft, selectPost }: DraftCardProps) {
         flexDirection='column'
         mt={['16px', 0]}
         ml={[0, '8px']}
-        overflow='hidden'
-        style={{ whiteSpace: 'break-spaces' }}
       >
         <Text
           color='primary'
@@ -129,6 +127,7 @@ export default function DraftCard({ draft, selectPost }: DraftCardProps) {
           </ChipButton>
         </Box>
         <Text
+          overflow='hidden'
           lineHeight='1.2em'
           maxHeight='6em'
           display={['none', 'unset']}

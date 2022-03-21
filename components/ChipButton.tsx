@@ -15,7 +15,6 @@ const Chip = styled(Box)<{ outline?: boolean }>`
   &:hover {
     background-color: ${({ theme, outline, color }) =>
       outline ? theme.colors.gray[200] : color};
-  }
   &:active {
     opacity: 0.7;
   }
@@ -39,7 +38,6 @@ export default function ChipButton({
       borderRadius={30}
       display='flex'
       alignItems='center'
-      flexShrink={0}
       className={styles.button}
     >
       {children}

@@ -1,5 +1,5 @@
 import styles from '@styles/Dashboard.module.scss';
-import React, { forwardRef } from 'react';
+import React from 'react';
 import { IconType } from 'react-icons';
 import { AiFillQuestionCircle } from 'react-icons/ai';
 import styled from 'styled-components';
@@ -40,23 +40,22 @@ const StyledIcon = styled(AiFillQuestionCircle)<{
   }
 `;
 
-const IconButton = forwardRef<HTMLDivElement, IconButtonProps>(
-  function IconButton(
-    { Icon, color, size, hoverColor, onClick, ...props },
-    ref
-  ) {
-    return (
-      <Container {...props} ref={ref} className={styles.flexCenter}>
-        <StyledIcon
-          as={Icon}
-          size={size ?? 24}
-          custom={color}
-          hover={hoverColor ?? color}
-          onClick={onClick}
-        />
-      </Container>
-    );
-  }
-);
-
-export default IconButton;
+export default function IconButton({
+  Icon,
+  color,
+  size,
+  hoverColor,
+  onClick,
+}: IconButtonProps) {
+  return (
+    <Container className={styles.flexCenter}>
+      <StyledIcon
+        as={Icon}
+        size={size ?? 24}
+        custom={color}
+        hover={hoverColor ?? color}
+        onClick={onClick}
+      />
+    </Container>
+  );
+}
