@@ -27,7 +27,6 @@ export default function DraftCard({ draft, selectPost }: DraftCardProps) {
 
   const onPublish = (event: React.MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
-    window.scrollTo(0, 0);
     selectPost(draft);
   };
 

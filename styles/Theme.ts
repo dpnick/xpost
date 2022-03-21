@@ -16,7 +16,7 @@ const lightTheme: DefaultTheme = {
     gray: {
       50: '#f9fafb',
       100: '#F5F7FA',
-      200: '#e5e7eb',
+      200: '#eaeaea',
       300: '#d1d5db',
       400: '#9ca3af',
       500: '#6b7280',
@@ -44,7 +44,7 @@ const darkTheme: DefaultTheme = {
     gray: {
       50: '#f9fafb',
       100: '#F5F7FA',
-      200: '#e5e7eb',
+      200: '#eaeaea',
       300: '#d1d5db',
       400: '#9ca3af',
       500: '#6b7280',

@@ -1,4 +1,4 @@
-$primary: #24b47e;
+@import './colors.scss';
 
 html,
 body {
@@ -37,5 +37,16 @@ a {
   position: fixed;
   top: 0px;
   width: 100%;
-  // z-index: -1;
+}
+
+// custom editor
+.ProseMirror {
+  p {
+    font-size: 1.2rem;
+    line-height: 1.5;
+  }
+
+  h3 {
+    font-size: 1.3rem;
+  }
 }

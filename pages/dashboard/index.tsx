@@ -15,9 +15,14 @@ import router from 'next/router';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { IoAddSharp } from 'react-icons/io5';
+import styled from 'styled-components';
 
 export const EMPTY_IMG = '/images/no_cover.png';
 export const PROD_URL = 'https://xpost.netlify.app';
+
+const AddButton = styled(Button)`
+  margin-right: 16px;
+`;
 
 export default function Dashboard() {
   const [postToPublish, setPostToPublish] = useState<Post | null>(null);
@@ -70,12 +75,16 @@ export default function Dashboard() {
   return (
     <>
       {postToPublish && (
-        <Modal onClose={hidePublishModal}>
-          <PublishModal
-            post={postToPublish}
-            integrations={integrations ?? []}
-          />
-        </Modal>
+        <Modal
+          open={!!postToPublish}
+          onChange={hidePublishModal}
+          content={
+            <PublishModal
+              post={postToPublish}
+              integrations={integrations ?? []}
+            />
+          }
+        />
       )}
       <Box width='100%' bg='white'>
         <Box minHeight='calc(100vh - 80px - 180px)' px='3vw' pb='10vh' pt='8px'>
@@ -92,7 +101,7 @@ export default function Dashboard() {
                 posts?.filter(({ published }) => !published)?.length
               })`}
               headerAction={
-                <Button
+                <AddButton
                   label='New'
                   Icon={IoAddSharp}
                   onClick={createNewDraft}

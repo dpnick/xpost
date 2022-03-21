@@ -32,7 +32,6 @@ export default function Button({
       border='1px solid primary'
       borderRadius='8px 16px'
       padding='8px 16px'
-      marginRight='16px'
       minHeight='40px'
       onClick={onClick}
       className={`${className} ${styles.flexCenter} ${styles.pointer}`}

@@ -5,7 +5,7 @@ import styled from 'styled-components';
 
 interface ChipButtonProps {
   children: React.ReactNode;
-  callback: (event: React.MouseEvent<HTMLDivElement>) => void;
+  callback?: (event: React.MouseEvent<HTMLDivElement>) => void;
   color?: string;
   outline?: boolean;
 }

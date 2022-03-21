@@ -1,10 +1,12 @@
+@import './colors.scss';
+
 .imgCard {
   position: relative;
   background-color: white;
   border-radius: 8px;
   padding: 8px;
   box-shadow: 5px 5px 15px 4px lightgray;
-  border: 1px solid #eaeaea;
+  border: 1px solid $gray200;
 }
 
 .pointer {

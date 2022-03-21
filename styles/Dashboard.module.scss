@@ -1,14 +1,16 @@
+@import './colors.scss';
+
 .card {
   background-color: white;
   border-radius: 8px;
   padding: 8px;
   box-shadow: 5px 5px 15px 4px lightgray;
-  border: 1px solid #eaeaea;
+  border: 1px solid $gray200;
 }
 
 .clickableCard {
   cursor: pointer;
-  border: 1px solid #eaeaea;
+  border: 1px solid $gray200;
   border-radius: 8px;
   box-shadow: 5px 5px 15px 4px lightgray;
   transition: color 0.15s ease, border-color 0.15s ease;
