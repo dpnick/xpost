@@ -1,10 +1,10 @@
 import Box from '@components/Box';
 import Button from '@components/Button';
-import Footer from '@components/Footer';
 import Modal from '@components/Modal';
 import PostList from '@components/PostList';
 import ProviderList from '@components/ProviderList';
 import PublishModal from '@components/PublishModal';
+import SideBarWrapper from '@components/SideBarWrapper';
 import Spinner from '@components/Spinner';
 import usePosts from '@hooks/usePosts';
 import useProviders from '@hooks/useProviders';
@@ -23,6 +23,9 @@ export const PROD_URL = 'https://xpost.netlify.app';
 const AddButton = styled(Button)`
   margin-right: 16px;
 `;
+
+export const HEADER_HEIGHT = 80;
+export const FOOTER_HEIGHT = 180;
 
 export default function Dashboard() {
   const [postToPublish, setPostToPublish] = useState<Post | null>(null);
@@ -60,15 +63,18 @@ export default function Dashboard() {
 
   if (postsLoading || providersLoading) {
     return (
-      <Box
-        width='100%'
-        height='100vh'
-        display='flex'
-        justifyContent='center'
-        alignItems='center'
-      >
-        <Spinner />
-      </Box>
+      <SideBarWrapper>
+        <Box
+          height='calc(100vh - 80px)'
+          width='100%'
+          display='flex'
+          justifyContent='center'
+          alignItems='center'
+          position='relative'
+        >
+          <Spinner />
+        </Box>
+      </SideBarWrapper>
     );
   }
 
@@ -86,8 +92,14 @@ export default function Dashboard() {
           }
         />
       )}
-      <Box width='100%' bg='white'>
-        <Box minHeight='calc(100vh - 80px - 180px)' px='3vw' pb='10vh' pt='8px'>
+      <SideBarWrapper>
+        <Box
+          width={['100vw', '100vw', '100vw', '85vw']}
+          minHeight={`calc(100vh - ${HEADER_HEIGHT}px - ${FOOTER_HEIGHT}px)`}
+          px='3vw'
+          pb='10vh'
+          pt='8px'
+        >
           <h3>Providers</h3>
           <ProviderList providers={providers!} integrations={integrations!} />
           <h3>Posts</h3>
@@ -119,8 +131,7 @@ export default function Dashboard() {
             />
           </Box>
         </Box>
-        <Footer />
-      </Box>
+      </SideBarWrapper>
     </>
   );
 }

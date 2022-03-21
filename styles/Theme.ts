@@ -1,7 +1,7 @@
 import { DefaultTheme } from 'styled-components';
 
 const lightTheme: DefaultTheme = {
-  breakpoints: ['768px', '1024px'],
+  breakpoints: ['768px', '1024px', '1224px'],
   fontSizes: [12, 14, 16, 20, 24, 32, 36], // could also be defined as em
   space: [0, 4, 8, 16, 32, 64],
   colors: {
@@ -29,7 +29,7 @@ const lightTheme: DefaultTheme = {
 };
 
 const darkTheme: DefaultTheme = {
-  breakpoints: ['768px', '1024px'],
+  breakpoints: ['768px', '1024px', '1224px'],
   fontSizes: [12, 14, 16, 20, 24, 32, 36],
   space: [0, 4, 8, 16, 32, 64],
   colors: {
