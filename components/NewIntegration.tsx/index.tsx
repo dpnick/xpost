@@ -5,7 +5,7 @@ import StyledInput from '@components/StyledInput';
 import Text from '@components/Text';
 import { encrypt } from '@lib/encrypt';
 import fetchJson from '@lib/fetchJson';
-import { Provider } from '@prisma/client';
+import { Integration, Provider } from '@prisma/client';
 import styles from '@styles/Dashboard.module.scss';
 import Image from 'next/image';
 import React, { useState } from 'react';
@@ -80,9 +80,12 @@ export default function NewIntegration({
         },
         true,
         {
-          success: `You can now start publishing on ${name} 🎉`,
+          success: ({
+            provider,
+          }: Integration & {
+            provider: Provider;
+          }) => `You can now start publishing on ${provider.displayName} 🎉`,
           loading: 'Almost there',
-          error: 'Please make sure your token is valid',
         }
       );
       closeModal();

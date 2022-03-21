@@ -130,7 +130,6 @@ export default function PublishModal({
         {
           success: 'Your article is now available 🔥',
           loading: 'Communicating with your blogging platform(s)',
-          error: 'Please make sure your token is valid',
         }
       );
       setPublications(res.publications);
