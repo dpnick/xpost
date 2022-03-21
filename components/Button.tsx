@@ -13,6 +13,7 @@ interface ButtonProps {
 }
 
 const HoverBox = styled(Box)`
+  width: fit-content;
   transition: opacity 0.2s ease-in-out;
   &:active {
     opacity: 0.7;

@@ -50,6 +50,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const result = await Promise.all(promises);
 
     if (result && result?.length > 0) {
+      // create one history record per day per integration
+      // if the record already exist => update the values
       await prisma.$transaction(
         integrations.map((cur) => {
           const { followersCount, reactionsCount, postsCount } = result.find(
@@ -77,7 +79,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
     return res.status(200).json(result);
   } catch (error) {
-    console.log(error);
     let message = String(error);
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
       message = handlePrismaError(error);

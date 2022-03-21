@@ -63,15 +63,18 @@ export default function Dashboard() {
 
   if (postsLoading || providersLoading) {
     return (
-      <Box
-        width='100%'
-        height='100vh'
-        display='flex'
-        justifyContent='center'
-        alignItems='center'
-      >
-        <Spinner />
-      </Box>
+      <SideBarWrapper>
+        <Box
+          height='calc(100vh - 80px)'
+          width='100%'
+          display='flex'
+          justifyContent='center'
+          alignItems='center'
+          position='relative'
+        >
+          <Spinner />
+        </Box>
+      </SideBarWrapper>
     );
   }
 

@@ -27,7 +27,7 @@ const CardList = styled.div`
   overflow-y: visible;
   @media (min-width: ${({ theme }) => theme.breakpoints[1]}) {
     display: grid;
-    grid-template-columns: auto auto auto;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     grid-gap: 16px;
     overflow: visible;
   }
@@ -45,10 +45,11 @@ export default function ProviderList({
   const [showNewProviders, setShowNewProviders] = useState<boolean>(false);
 
   const infosFetch: Fetcher<IntegrationInfos[]> = fetchSwr;
-  const { data: infos, mutate } = useSWRImmutable(
-    '/api/integration/get-infos',
-    infosFetch
-  );
+  const {
+    data: infos,
+    mutate,
+    error: errorInfos,
+  } = useSWRImmutable('/api/integration/get-infos', infosFetch);
 
   const toggleNewProviders = () => {
     setShowNewProviders((prev) => !prev);
@@ -99,6 +100,7 @@ export default function ProviderList({
                 integration={integration}
                 provider={integration.provider!}
                 infos={integrationInfos!}
+                isStatsLoading={!infos && !errorInfos}
               />
             );
           })}
