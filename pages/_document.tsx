@@ -37,11 +37,11 @@ class MainDocument extends Document {
           <meta name='twitter:title' content='Xpost' />
           <meta
             name='twitter:description'
-            content='Productivity tool for content creator'
+            content='Productivity tool for technical writers'
           />
           <meta
             name='twitter:image'
-            content='https://xpost.netlify.app/icon/icon-192x192.png'
+            content='https://res.cloudinary.com/dpnick/image/upload/v1647955073/Capture_d_e%CC%81cran_2022-03-22_a%CC%80_14.17.35_z2ij5b.png?4362984378'
           />
           <meta name='twitter:creator' content='@dpnick_' />
 
