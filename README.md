@@ -1,12 +1,56 @@
-# Xpost
+<div align="center">
+  <a href="https://github.com/dpnick/xpost">
+    <img src="public/icon.svg" alt="Logo" width="80" height="80">
+  </a>
 
-This project was originally built for the Hashnode x Netlify hackathon.
+<br>
+<h1 align="center">Xpost</h1>
+<h2>Write once publish everywhere</h2>
 
-## Main purpose
+  <p align="center">
+    Productivity tool for technical writers
+    <br />
+    <a href="https://xpost.netlify.app"><strong>Access app »</strong></a>
+    <br />
+    <br />
+    <a href="https://github.com/dpnick/xpost/issues">Report Bug</a>
+    ·
+    <a href="https://github.com/dpnick/xpost/issues">Request Feature</a>
+  </p>
+</div>
 
-The idea of this app is to create the ultimate tool for content creator / technical writer.
+[![Twitter Follow](https://img.shields.io/twitter/follow/dpnick_?style=social)](https://twitter.com/intent/follow?original_referer=https://github.com/dpnick_&screen_name=dpnick_)
+
+<!-- FEATURES -->
+
+## Core features
+
+- Handle all your platforms and accounts from a single place
+- Cross post your article on multiple (or a single) platform(s) at once. We take care of everything (canonical url, tags, slug...)
+- Become more productive by using our custom text editor
+- Access your daily.dev bookmark inspirations directly next to your articles
+- SEO ready
+
+<!-- ROADMAP -->
 
 ## Roadmap
 
-- [x] 01/03/22: v0.1 publish on multiple blogging platforms at once
-- [ ] 01/04/22: v0.2 schedule publication + more platforms + communication
+- [x] Project creation
+- [x] Custom text editor with high level writing experience
+- [x] Connect providers (Hashnode and dev.to)
+- [x] Basic analytics
+- [x] Cross post article on Hashnode and dev.to
+- [x] Inspirations feature (daily.dev bookmarks)
+- [x] PWA
+- [ ] Adding provider (Medium)
+- [ ] Schedule publication
+- [ ] Full analytics
+
+See the [open issues](https://github.com/dpnick/xpost/issues) for a full list of proposed features (and known issues).
+
+<!-- MAINTAINERS -->
+
+## Maintainers & creators
+
+- @dpnick
+- @imkevk
