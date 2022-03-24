@@ -1,18 +1,22 @@
+import Spinner from '@components/Spinner';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { AiOutlineBulb, AiOutlineHome } from 'react-icons/ai';
 import Box from '../Box';
-import Footer from '../Footer';
 import SideBarElement from './SideBarElement';
 
-interface SideBarWrapperProps {
+interface SidebarLayoutProps {
+  isLoading?: boolean;
   children: React.ReactNode;
 }
 
 export const DashboardPath = '/dashboard';
 export const InspirationsPath = '/dashboard/inspirations';
 
-export default function SideBarWrapper({ children }: SideBarWrapperProps) {
+export default function SidebarLayout({
+  isLoading = false,
+  children,
+}: SidebarLayoutProps) {
   const router = useRouter();
 
   const goDashboard = () => router.push(DashboardPath);
@@ -44,9 +48,21 @@ export default function SideBarWrapper({ children }: SideBarWrapperProps) {
             onClick={goInspirations}
           />
         </Box>
-        {children}
+        {isLoading ? (
+          <Box
+            height='calc(100vh - 80px)'
+            width='100%'
+            display='flex'
+            justifyContent='center'
+            alignItems='center'
+            position='relative'
+          >
+            <Spinner />
+          </Box>
+        ) : (
+          children
+        )}
       </Box>
-      <Footer />
     </Box>
   );
 }

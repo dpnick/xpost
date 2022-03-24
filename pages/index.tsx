@@ -7,7 +7,6 @@ import fetchJson from '@lib/fetchJson';
 import { Provider, ProviderName } from '@prisma/client';
 import styles from '@styles/Home.module.scss';
 import { useSession } from 'next-auth/react';
-import Head from 'next/head';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import toast from 'react-hot-toast';
@@ -27,10 +26,6 @@ const Home = ({ providers }: HomeProps) => {
 
   return (
     <div>
-      <Head>
-        <title>Xpost</title>
-        <meta name='description' content='Cross posting your blog articles' />
-      </Head>
       <Box
         display='flex'
         justifyContent='space-between'

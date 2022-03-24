@@ -4,8 +4,7 @@ import Modal from '@components/Modal';
 import PostList from '@components/PostList';
 import ProviderList from '@components/ProviderList';
 import PublishModal from '@components/PublishModal';
-import SideBarWrapper from '@components/SideBarWrapper';
-import Spinner from '@components/Spinner';
+import SidebarLayout from '@components/SidebarLayout';
 import usePosts from '@hooks/usePosts';
 import useProviders from '@hooks/useProviders';
 import fetchJson from '@lib/fetchJson';
@@ -25,7 +24,6 @@ const AddButton = styled(Button)`
 `;
 
 export const HEADER_HEIGHT = 80;
-export const FOOTER_HEIGHT = 180;
 
 export default function Dashboard() {
   const [postToPublish, setPostToPublish] = useState<Post | null>(null);
@@ -61,23 +59,6 @@ export default function Dashboard() {
   const selectPostToPublish = (post: Post) => setPostToPublish(post);
   const hidePublishModal = () => setPostToPublish(null);
 
-  if (postsLoading || providersLoading) {
-    return (
-      <SideBarWrapper>
-        <Box
-          height='calc(100vh - 80px)'
-          width='100%'
-          display='flex'
-          justifyContent='center'
-          alignItems='center'
-          position='relative'
-        >
-          <Spinner />
-        </Box>
-      </SideBarWrapper>
-    );
-  }
-
   return (
     <>
       {postToPublish && (
@@ -92,10 +73,10 @@ export default function Dashboard() {
           }
         />
       )}
-      <SideBarWrapper>
+      <SidebarLayout isLoading={postsLoading || providersLoading}>
         <Box
           width={['100vw', '100vw', '100vw', '85vw']}
-          minHeight={`calc(100vh - ${HEADER_HEIGHT}px - ${FOOTER_HEIGHT}px)`}
+          minHeight={`calc(100vh - ${HEADER_HEIGHT}px)`}
           px='3vw'
           pb='10vh'
           pt='8px'
@@ -131,7 +112,7 @@ export default function Dashboard() {
             />
           </Box>
         </Box>
-      </SideBarWrapper>
+      </SidebarLayout>
     </>
   );
 }

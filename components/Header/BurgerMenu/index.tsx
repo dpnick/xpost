@@ -1,7 +1,7 @@
 import Box from '@components/Box';
 import Button from '@components/Button';
-import { DashboardPath, InspirationsPath } from '@components/SideBarWrapper';
-import SideBarElement from '@components/SideBarWrapper/SideBarElement';
+import { DashboardPath, InspirationsPath } from '@components/SidebarLayout';
+import SideBarElement from '@components/SidebarLayout/SideBarElement';
 import Text from '@components/Text';
 import { Session } from 'next-auth';
 import { signOut } from 'next-auth/react';
