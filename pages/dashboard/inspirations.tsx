@@ -4,8 +4,7 @@ import Button from '@components/Button';
 import ChipButton from '@components/ChipButton';
 import IconButton from '@components/IconButton';
 import Modal from '@components/Modal';
-import SideBarWrapper from '@components/SideBarWrapper';
-import Spinner from '@components/Spinner';
+import SidebarLayout from '@components/SidebarLayout';
 import StyledInput from '@components/StyledInput';
 import Text from '@components/Text';
 import useBookmarks from '@hooks/useBookmarks';
@@ -137,25 +136,8 @@ export default function Inspirations() {
   const openDaily = () =>
     window.open('https://app.daily.dev/bookmarks', '_blank');
 
-  if (userLoading || bookmarkLoading) {
-    return (
-      <SideBarWrapper>
-        <Box
-          height='calc(100vh - 80px)'
-          width='100%'
-          display='flex'
-          justifyContent='center'
-          alignItems='center'
-          position='relative'
-        >
-          <Spinner />
-        </Box>
-      </SideBarWrapper>
-    );
-  }
-
   return (
-    <SideBarWrapper>
+    <SidebarLayout isLoading={userLoading || bookmarkLoading}>
       <Box
         width={['100vw', '100vw', '100vw', '85vw']}
         minHeight={`calc(100vh - ${HEADER_HEIGHT}px)`}
@@ -315,7 +297,7 @@ export default function Inspirations() {
           </Box>
         )}
       </Box>
-    </SideBarWrapper>
+    </SidebarLayout>
   );
 }
 

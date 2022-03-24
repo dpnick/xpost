@@ -1,0 +1,25 @@
+{
+  "title": "Xpost",
+  "titleTemplate": "%s - Xpost",
+  "description": "Productivity tool for technical writers",
+  "openGraph": {
+    "title": "Xpost",
+    "description": "Productivity tool for technical writers",
+    "type": "website",
+    "url": "https://xpost.netlify.app",
+    "site_name": "Xpost",
+    "images": [
+      {
+        "url": "/images/og.png",
+        "width": "1800",
+        "height": "1200",
+        "alt": "Xpost"
+      }
+    ]
+  },
+  "twitter": {
+    "handle": "@dpnick_",
+    "site": "@dpnick_",
+    "cardType": "summary_large_image"
+  }
+}
