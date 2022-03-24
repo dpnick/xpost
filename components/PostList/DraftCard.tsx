@@ -2,18 +2,20 @@ import Box from '@components/Box';
 import Text from '@components/Text';
 import usePosts from '@hooks/usePosts';
 import fetchJson from '@lib/fetchJson';
+import { parseMarkdownToText } from '@lib/parser/markdown';
 import { Post } from '@prisma/client';
 import styles from '@styles/Dashboard.module.scss';
 import { formatDistanceToNow, parseISO } from 'date-fns';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { EMPTY_IMG } from 'pages/dashboard';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { AiFillQuestionCircle } from 'react-icons/ai';
 import { BsArrowUpRight } from 'react-icons/bs';
 import ChipButton from '../ChipButton';
 import PostCardContainer from './PostCardContainer';
+import Preview from './Preview';
 
 interface DraftCardProps {
   draft: Post;
@@ -22,8 +24,22 @@ interface DraftCardProps {
 
 export default function DraftCard({ draft, selectPost }: DraftCardProps) {
   const { id, cover, title, content, updatedAt } = draft;
+  const [preview, setPreview] = useState<string>();
   const { refresh } = usePosts();
   const router = useRouter();
+
+  useEffect(() => {
+    if (content && content?.length > 0) {
+      const stripRegEx = new RegExp(/^\\\W*$/gm);
+      const fiveFirstLines = content
+        .split('\n')
+        ?.filter((value) => !stripRegEx.test(value) && value)
+        ?.filter((_, index) => index <= 4)
+        ?.join('\n');
+      const result = parseMarkdownToText(fiveFirstLines);
+      setPreview(result);
+    }
+  }, [content]);
 
   const onPublish = (event: React.MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
@@ -128,14 +144,11 @@ export default function DraftCard({ draft, selectPost }: DraftCardProps) {
             <Text color='danger'>Delete</Text>
           </ChipButton>
         </Box>
-        <Text
-          lineHeight='1.2em'
-          maxHeight='6em'
-          display={['none', 'unset']}
-          mt='8px'
-        >
-          {content}
-        </Text>
+        {preview && (
+          <Preview display={['none', '-webkit-box']} color='gray.500'>
+            {preview}
+          </Preview>
+        )}
       </Box>
     </PostCardContainer>
   );

@@ -24,7 +24,7 @@ import {
   IoInformationCircleOutline,
 } from 'react-icons/io5';
 import { MdDelete } from 'react-icons/md';
-import Editor from 'rich-markdown-editor';
+import Editor, { theme } from 'rich-markdown-editor';
 import styled, { useTheme } from 'styled-components';
 import { EMPTY_IMG } from '..';
 
@@ -307,6 +307,14 @@ export default function Edit() {
         uploadImage={uploadImg}
         placeholder='Type / to use blocks'
         disableExtensions={['container_notice']}
+        theme={{
+          ...theme,
+          fontFamily: `-apple-system, BlinkMacSystemFont, "Segoe UI", Oxygen, Ubuntu,
+            Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+            text-rendering: optimizeLegibility`,
+          link: colors.primary,
+          selected: colors.primary,
+        }}
         embeds={[
           {
             title: 'Youtube',

@@ -1,14 +1,16 @@
 import Box from '@components/Box';
 import Text from '@components/Text';
+import { parseMarkdownToText } from '@lib/parser/markdown';
 import { Integration, Post, Provider, Publication } from '@prisma/client';
 import styles from '@styles/Dashboard.module.scss';
 import { formatDistanceToNow, parseISO } from 'date-fns';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { EMPTY_IMG } from 'pages/dashboard';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import ChipButton from '../ChipButton';
 import PostCardContainer from './PostCardContainer';
+import Preview from './Preview';
 
 interface PublishedCardProps {
   post: Post & { publications: Publication[] };
@@ -19,10 +21,25 @@ export default function PublishedCard({
   post,
   integrations,
 }: PublishedCardProps) {
-  const { id, cover, title, firstPublishedAt, publications, tags } = post;
+  const { id, cover, title, content, firstPublishedAt, publications, tags } =
+    post;
+  const [preview, setPreview] = useState<string>();
   const router = useRouter();
 
   const arrTags = tags && tags?.split(',');
+
+  useEffect(() => {
+    if (content && content?.length > 0) {
+      const stripRegEx = new RegExp(/^\\\W*$/gm);
+      const fiveFirstLines = content
+        .split('\n')
+        ?.filter((value) => !stripRegEx.test(value) && value)
+        ?.filter((_, index) => index <= 4)
+        ?.join('\n');
+      const result = parseMarkdownToText(fiveFirstLines);
+      setPreview(result);
+    }
+  }, [content]);
 
   const openUrl = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>,
@@ -134,6 +151,11 @@ export default function PublishedCard({
               </Text>
             ))}
           </Box>
+        )}
+        {preview && (
+          <Preview display={['none', '-webkit-box']} color='gray.500'>
+            {preview}
+          </Preview>
         )}
       </Box>
     </PostCardContainer>
