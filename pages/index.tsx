@@ -3,6 +3,7 @@ import Button from '@components/Button';
 import Footer from '@components/Footer';
 import ProviderCard from '@components/ProviderList/ProviderCard';
 import Text from '@components/Text';
+import Tooltip from '@components/Tooltip';
 import fetchJson from '@lib/fetchJson';
 import { Provider, ProviderName } from '@prisma/client';
 import styles from '@styles/Home.module.scss';
@@ -10,11 +11,35 @@ import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import toast from 'react-hot-toast';
-import { MdLooks3, MdLooksOne, MdLooksTwo } from 'react-icons/md';
+import { IconType } from 'react-icons';
+import { MdLock, MdLooks3, MdLooksOne, MdLooksTwo } from 'react-icons/md';
+import { RiOpenSourceFill } from 'react-icons/ri';
 
 interface HomeProps {
   providers: Provider[];
 }
+
+interface Advantage {
+  id: number;
+  Icon: IconType;
+  title: string;
+  desc: string;
+}
+
+const advantages: Advantage[] = [
+  {
+    id: 1,
+    Icon: MdLock,
+    title: 'Secure',
+    desc: 'Your sensitive data are encrypted and protected.',
+  },
+  {
+    id: 2,
+    Icon: RiOpenSourceFill,
+    title: 'Open-source',
+    desc: 'The code repository is accessible for everyone on GitHub.',
+  },
+];
 
 const Home = ({ providers }: HomeProps) => {
   const router = useRouter();
@@ -56,22 +81,41 @@ const Home = ({ providers }: HomeProps) => {
 
       <main className={styles.main}>
         <Text fontSize='4rem' fontWeight='bold' textAlign='center'>
-          Empower your
+          Write once
           <Text color='primary' textAlign='center'>
-            content
+            publish everywhere
           </Text>
         </Text>
 
         <Text
           textAlign='center'
           color='gray.500'
-          margin='3rem 0'
+          mt='3rem'
+          mb='1rem'
           lineHeight={1.5}
           fontSize='1.5rem'
         >
-          Productivity tool for content creator & technical writer
+          Productivity tool for content creators & technical writers
         </Text>
 
+        <Box display='flex' justifyContent='center' flexWrap='wrap' mb='3rem'>
+          {advantages.map(({ id, Icon, title, desc }, index) => (
+            <Tooltip key={id} content={desc}>
+              <Box
+                display='flex'
+                alignItems='center'
+                borderRadius={8}
+                border='1px solid'
+                borderColor='gray.300'
+                p={2}
+                mr={index + 1 === advantages.length ? 0 : 2}
+              >
+                <Icon size={20} />
+                <Text ml={2}>{title}</Text>
+              </Box>
+            </Tooltip>
+          ))}
+        </Box>
         <Box display='flex' justifyContent='center'>
           {providers?.map((provider) => (
             <ProviderCard
