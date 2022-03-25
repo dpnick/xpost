@@ -1,7 +1,7 @@
 name: Trigger scheduled article publication
 on:
   schedule:
-    - cron: '* * * * *'
+    - cron: '*/15 * * * *'
 jobs:
   build:
     name: Trigger scheduled article publication
@@ -15,4 +15,4 @@ jobs:
         with:
           url: 'https://xpost.netlify.app/api/post/publish-scheduled'
           method: 'POST'
-          bearerToken: $SCHEDULED_KEY
+          bearerToken: echo '$SCHEDULED_KEY'
