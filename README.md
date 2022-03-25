@@ -19,8 +19,6 @@
   </p>
 </div>
 
-[![Twitter Follow](https://img.shields.io/twitter/follow/dpnick_?style=social)](https://twitter.com/intent/follow?original_referer=https://github.com/dpnick_&screen_name=dpnick_)
-
 <!-- FEATURES -->
 
 ## Core features
@@ -52,5 +50,6 @@ See the [open issues](https://github.com/dpnick/xpost/issues) for a full list of
 
 ## Maintainers & creators
 
-- @dpnick
-- @imkevk
+[![Twitter Follow](https://img.shields.io/twitter/follow/dpnick_?style=social)](https://twitter.com/intent/follow?original_referer=https://github.com/dpnick_&screen_name=dpnick_)
+<br/>
+[![Twitter Follow](https://img.shields.io/twitter/follow/dskevk?style=social)](https://twitter.com/intent/follow?original_referer=https://github.com/dskevk&screen_name=dskevk)
