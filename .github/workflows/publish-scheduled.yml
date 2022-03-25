@@ -1,0 +1,18 @@
+name: Trigger scheduled article publication
+on:
+  schedule:
+    - cron: '* * * * *'
+jobs:
+  build:
+    name: Trigger scheduled article publication
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: API request
+      env:
+        SCHEDULED_KEY: ${{ secrets.SCHEDULED_KEY }}
+      uses: fjogeleit/http-request-action@v1.9.1
+      with:
+        url: 'https://xpost.netlify/api/post/publish-scheduled'
+        method: 'POST'
+        bearerToken: $SCHEDULED_KEY
