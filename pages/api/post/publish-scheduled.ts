@@ -9,10 +9,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   console.log(req.headers);
   try {
     const key = req.headers.authorization?.split(' ')[1];
-    if (!key || key !== process.env.SCHEDULED_KEY) {
-      return res.status(401).json({ message: 'Missing permission' });
+    console.log(key);
+    console.log(process.env.SCHEDULED_KEY);
+    if (key && key === process.env.SCHEDULED_KEY) {
+      return res.status(200).json({ success: true });
     }
-    return res.status(200).json({ success: true });
+    return res.status(401).json({ message: 'Missing permission' });
   } catch (error) {
     let message = String(error);
     if (error instanceof Prisma.PrismaClientKnownRequestError) {

@@ -1,9 +1,7 @@
 name: Trigger scheduled article publication
 on:
   schedule:
-    - cron: '*/60 * * * *'
-  workflow_dispatch:
-
+    - cron: '*/15 * * * *'
 jobs:
   publish_scheduled:
     runs-on: ubuntu-latest
