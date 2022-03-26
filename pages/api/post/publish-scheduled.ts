@@ -8,6 +8,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   console.log(req.body);
   console.log(req.headers);
   try {
+    const key = req.headers.authorization?.split(' ')[1];
+    if (!key || key !== process.env.SCHEDULED_KEY) {
+      return res.status(401).json({ message: 'Missing permission' });
+    }
     return res.status(200).json({ success: true });
   } catch (error) {
     let message = String(error);

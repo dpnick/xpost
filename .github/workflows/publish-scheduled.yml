@@ -1,15 +1,16 @@
 name: Trigger scheduled article publication
 on:
   schedule:
-    - cron: '*/15 * * * *'
+    - cron: '0 * * * *'
+  workflow_dispatch:
+
 jobs:
   publish_scheduled:
     name: Trigger scheduled article publication
     runs-on: ubuntu-latest
     environment: production
     steps:
-      - name: API request
-        uses: fjogeleit/http-request-action@v1.9.1
+      - uses: fjogeleit/http-request-action@v1.9.1
         with:
           url: 'https://xpost.netlify.app/api/post/publish-scheduled'
           method: 'POST'
