@@ -1,17 +1,16 @@
 name: Trigger scheduled article publication
 on:
   schedule:
-    - cron: '0 * * * *'
+    - cron: '*/60 * * * *'
   workflow_dispatch:
 
 jobs:
   publish_scheduled:
-    name: Trigger scheduled article publication
     runs-on: ubuntu-latest
     environment: production
     steps:
-      - uses: fjogeleit/http-request-action@v1.9.1
-        with:
-          url: 'https://xpost.netlify.app/api/post/publish-scheduled'
-          method: 'POST'
-          bearerToken: ${{ secrets.SCHEDULED_KEY }}
+      - name: Trigger scheduled article publication
+        run: |
+          curl --request POST \
+          --url 'https://xpost.netlify.app/api/post/publish-scheduled' \
+          --header 'Authorization: Bearer ${{ secrets.SCHEDULED_KEY }}'
