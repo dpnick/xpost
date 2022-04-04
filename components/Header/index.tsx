@@ -23,7 +23,7 @@ export default function Header() {
   const { breakpoints } = useTheme();
   const { width } = useScreenSize();
 
-  const test = useRef(null);
+  const avatarRef = useRef(null);
 
   useEffect(() => {
     let nextGreeting = Greetings.EVENING;
@@ -75,7 +75,7 @@ export default function Header() {
       <Box display='flex'>
         {width > Number(breakpoints[2].split('px')[0]) ? (
           <ModalUser session={session}>
-            <Avatar ref={test} session={session} />
+            <Avatar ref={avatarRef} session={session} />
           </ModalUser>
         ) : (
           <BurgerMenu session={session} />

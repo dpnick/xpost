@@ -1,5 +1,5 @@
 import { handlePrismaError, prisma } from '@lib/prisma';
-import { Post, Prisma } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import { withSentry } from '@sentry/nextjs';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getSession } from 'next-auth/react';
@@ -7,8 +7,7 @@ import { getSession } from 'next-auth/react';
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getSession({ req });
 
-  const update: Partial<Omit<Post, 'rawTags'>> = req.body?.update;
-  const pid: string = req.body?.pid;
+  const postId: string = req.body?.postId;
 
   if (!session) {
     return res.status(401).json({
@@ -16,14 +15,32 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     });
   }
 
-  try {
-    const updatedPost = await prisma.post.update({
-      where: {
-        id: pid,
-      },
-      data: update,
+  if (!postId) {
+    return res.status(422).json({
+      message: 'Missing parameters',
     });
-    return res.status(200).json(updatedPost);
+  }
+
+  try {
+    await prisma.publication.deleteMany({
+      where: {
+        postId,
+      },
+    });
+
+    await prisma.post.update({
+      where: {
+        id: postId,
+      },
+      data: {
+        scheduledAt: null,
+        published: false,
+        tags: null,
+        rawTags: Prisma.JsonNull,
+      },
+    });
+
+    return res.status(200).json({ success: true });
   } catch (error) {
     let message = String(error);
     if (error instanceof Prisma.PrismaClientKnownRequestError) {

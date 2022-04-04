@@ -1,6 +1,8 @@
 import styled from 'styled-components';
 
 const PublishButton = styled.input`
+  position: sticky;
+  bottom: 8px;
   width: 100%;
   height: 40px;
   border: none;
@@ -9,8 +11,6 @@ const PublishButton = styled.input`
   font-weight: bold;
   border-radius: 4px;
   cursor: pointer;
-  margin-top: 16px;
-  margin-bottom: 16px;
   transition: background 0.5s ease-in-out;
   &:active {
     opacity: 0.4;

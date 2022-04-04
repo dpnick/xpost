@@ -1,7 +1,8 @@
 import Box from '@components/Box';
 import IconButton from '@components/IconButton';
+import Spinner from '@components/Spinner';
 import * as Dialog from '@radix-ui/react-dialog';
-import React from 'react';
+import React, { Suspense } from 'react';
 import { IoMdClose } from 'react-icons/io';
 import ContentContainer from './ContentContainer';
 import ModalOverlay from './Overlay';
@@ -10,6 +11,7 @@ interface ModalProps {
   open?: boolean;
   onChange?: () => void;
   content: React.ReactNode;
+  contentContainerStyle?: React.CSSProperties;
   children?: React.ReactNode;
 }
 
@@ -18,20 +20,21 @@ export default function Modal({
   onChange,
   children,
   content,
+  contentContainerStyle,
 }: ModalProps) {
   return (
     <Dialog.Root open={open} onOpenChange={onChange}>
       <Dialog.Trigger asChild>{children}</Dialog.Trigger>
       <Dialog.Portal>
         <ModalOverlay>
-          <ContentContainer>
+          <ContentContainer style={contentContainerStyle}>
             <Dialog.Close asChild>
               <Box display='flex' justifyContent='flex-end' height={32} px={3}>
                 <IconButton Icon={IoMdClose} color='black' />
               </Box>
             </Dialog.Close>
             <Box height='calc(100% - 32px)' overflowY='auto' px={3}>
-              {content}
+              <Suspense fallback={<Spinner />}>{content}</Suspense>
             </Box>
           </ContentContainer>
         </ModalOverlay>

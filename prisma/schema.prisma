@@ -107,11 +107,13 @@ model Post {
   cover         String?
   slug          String?
   tags          String?    @db.Text
+  rawTags       Json?
   userId       String
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   firstPublishedAt      DateTime?
   published     Boolean     @default(false)
   publications       Publication[]
+  scheduledAt       DateTime?
 }
 
 // represent a post publication on a specific integration

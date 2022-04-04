@@ -3,7 +3,6 @@ import Button from '@components/Button';
 import Modal from '@components/Modal';
 import PostList from '@components/PostList';
 import ProviderList from '@components/ProviderList';
-import PublishModal from '@components/PublishModal';
 import SidebarLayout from '@components/SidebarLayout';
 import usePosts from '@hooks/usePosts';
 import useProviders from '@hooks/useProviders';
@@ -11,10 +10,12 @@ import fetchJson from '@lib/fetchJson';
 import { Post } from '@prisma/client';
 import styles from '@styles/Dashboard.module.scss';
 import router from 'next/router';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import toast from 'react-hot-toast';
 import { IoAddSharp } from 'react-icons/io5';
 import styled from 'styled-components';
+
+const PublishModal = React.lazy(() => import('@components/PublishModal'));
 
 export const EMPTY_IMG = '/images/no_cover.png';
 export const PROD_URL = 'https://xpost.netlify.app';
@@ -65,6 +66,7 @@ export default function Dashboard() {
         <Modal
           open={!!postToPublish}
           onChange={hidePublishModal}
+          contentContainerStyle={{ width: '100%', minHeight: '100%' }}
           content={
             <PublishModal
               post={postToPublish}
@@ -88,10 +90,18 @@ export default function Dashboard() {
             <PostList
               isDraft
               selectPostToPublish={selectPostToPublish}
-              posts={posts ? posts?.filter(({ published }) => !published) : []}
+              posts={
+                posts
+                  ? posts?.filter(
+                      ({ published, scheduledAt }) => !published && !scheduledAt
+                    )
+                  : []
+              }
               integrations={integrations!}
               title={`Drafts (${
-                posts?.filter(({ published }) => !published)?.length
+                posts?.filter(
+                  ({ published, scheduledAt }) => !published && !scheduledAt
+                )?.length
               })`}
               headerAction={
                 <AddButton
@@ -102,7 +112,27 @@ export default function Dashboard() {
               }
             />
           </Box>
-          <Box p={0} mt='16px' className={styles.card}>
+          <Box p={0} mt={3} className={styles.card}>
+            <PostList
+              isScheduled
+              selectPostToPublish={selectPostToPublish}
+              posts={
+                posts
+                  ? posts?.filter(
+                      ({ published, scheduledAt }) =>
+                        !published && !!scheduledAt
+                    )
+                  : []
+              }
+              integrations={integrations!}
+              title={`Scheduled (${
+                posts?.filter(
+                  ({ published, scheduledAt }) => !published && !!scheduledAt
+                )?.length
+              })`}
+            />
+          </Box>
+          <Box p={0} mt={3} className={styles.card}>
             <PostList
               posts={posts ? posts?.filter(({ published }) => !!published) : []}
               integrations={integrations!}
