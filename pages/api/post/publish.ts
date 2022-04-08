@@ -90,6 +90,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         data: {
           published: true,
           firstPublishedAt: new Date(),
+          rawTags: JSON.stringify(tags),
           tags:
             tags && tags?.length > 0
               ? tags.map((tag) => tag.label.split(' ').join('')).toString()

@@ -100,7 +100,13 @@ function publishNewArticle(
     slug: post.slug!,
     coverImageURL: post.cover!,
     contentMarkdown: post.content!,
-    tags: hashnodeCompatibleTags ?? [],
+    tags:
+      hashnodeCompatibleTags?.length > 0
+        ? hashnodeCompatibleTags
+        : [
+            { _id: '56744721958ef13879b94ae7' },
+            { _id: '56744723958ef13879b952d7' },
+          ],
   };
 
   if (originalUrl) {

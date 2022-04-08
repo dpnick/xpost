@@ -2,7 +2,6 @@ import Box from '@components/Box';
 import ChipButton from '@components/ChipButton';
 import IconButton from '@components/IconButton';
 import Modal from '@components/Modal';
-import PublishModal from '@components/PublishModal';
 import Spinner from '@components/Spinner';
 import Text from '@components/Text';
 import Tooltip from '@components/Tooltip';
@@ -27,6 +26,8 @@ import { MdDelete } from 'react-icons/md';
 import Editor, { theme } from 'rich-markdown-editor';
 import styled, { useTheme } from 'styled-components';
 import { EMPTY_IMG } from '..';
+
+const PublishModal = React.lazy(() => import('@components/PublishModal'));
 
 const StyledInput = styled.textarea`
   width: 100%;
@@ -224,15 +225,13 @@ export default function Edit() {
           size='2em'
         />
         <Box display='flex' alignItems='center'>
-          {!selectedPost?.published && (
-            <Modal
-              content={
-                <PublishModal
-                  post={selectedPost!}
-                  integrations={integrations!}
-                />
-              }
-            >
+          <Modal
+            contentContainerStyle={{ width: '100%', minHeight: '100%' }}
+            content={
+              <PublishModal post={selectedPost!} integrations={integrations!} />
+            }
+          >
+            {!selectedPost?.published && (
               <Box>
                 <ChipButton color='primary'>
                   <Text mr={1} color='white'>
@@ -241,8 +240,8 @@ export default function Edit() {
                   <BsArrowUpRight size={16} color='white' />
                 </ChipButton>
               </Box>
-            </Modal>
-          )}
+            )}
+          </Modal>
           <IconButton
             Icon={MdDelete}
             color='black'

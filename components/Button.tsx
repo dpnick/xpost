@@ -10,10 +10,15 @@ interface ButtonProps {
   label: string;
   Icon?: IconType;
   className?: string;
+  disabled?: boolean;
 }
 
-const HoverBox = styled(Box)`
+const HoverBox = styled(Box)<{ disabled?: boolean }>`
+  background-color: ${({ disabled, theme }) =>
+    disabled ? theme.colors.gray[300] : theme.colors.primary};
   width: fit-content;
+  pointer-events: ${({ disabled }) => (disabled ? 'none' : 'all')};
+  cursor: ${({ disabled }) => (disabled ? 'default' : 'pointer')};
   transition: opacity 0.2s ease-in-out;
   &:active {
     opacity: 0.7;
@@ -25,16 +30,17 @@ export default function Button({
   Icon,
   onClick,
   className,
+  disabled,
 }: ButtonProps) {
   return (
     <HoverBox
-      backgroundColor='primary'
       color='white'
       border='1px solid primary'
       borderRadius='8px 16px'
       padding='8px 16px'
       minHeight='40px'
       onClick={onClick}
+      disabled={disabled}
       className={`${className} ${styles.flexCenter} ${styles.pointer}`}
     >
       <Text mr={Icon ? '4px' : 0}>{label}</Text>
